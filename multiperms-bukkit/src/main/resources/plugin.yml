@@ -1,0 +1,19 @@
+api-version: 1.16
+author: Dev7ex
+database: false
+depend: [ FacilisCommon ]
+description: ${project.description}
+load: POSTWORLD
+loadbefore: [ ]
+main: com.dev7ex.multiperms.MultiPermsPlugin
+name: MultiPerms
+prefix: MultiPerms
+softdepend: [ PlaceholderAPI ]
+version: ${project.version}
+website: ${project.url}
+commands:
+  permission:
+    aliases: [ multiperms, mp, perms ]
+    description: 'Main Command for all MultiPerms Commands'
+    permission: multiperms.command.permission
+    usage: /permission
