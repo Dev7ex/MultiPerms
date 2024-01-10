@@ -28,16 +28,16 @@ MultiPerms is a simple permission management system for Minecraft.
 
 ```
 * /permission                                                       [multiperms.command.permission]
-* /permission group create <Name> <Identification>                  [multiworld.command.world.back]
-* /permission group delete <Group>                                  [multiworld.command.world.backup]
-* /permission group edit <Group> <Property> <Value>                 [multiworld.command.world.clone]
-* /permission group remove <Permission>                             [multiworld.command.world.create]
-* /permission reload                                                [multiworld.command.world.delete]
-* /permission user <User> add <Group | Permission> <Value>          [multiworld.command.world.flag]
-* /permission user <User> clear <Group | Permission>                [multiworld.command.world]
-* /permission user <User> info                                      [multiworld.command.world.import]
-* /permission user <User> remove <Group | Permission> <Value>       [multiworld.command.world.info]
-* /permission user <User> set <Group>                               [multiworld.command.world.list]
+* /permission group create <Name> <Identification>                  [multiperms.command.permission.group.create]
+* /permission group delete <Group>                                  [multiperms.command.permission.group.delete]
+* /permission group edit <Group> <Property> <Value>                 [multiperms.command.permission.group.edit]
+* /permission group remove <Permission>                             [multiperms.command.permission.group.remove]
+* /permission reload                                                [multiperms.command.permission.reload]
+* /permission user <User> add <Group | Permission> <Value>          [multiperms.command.permission.user.add]
+* /permission user <User> clear <Group | Permission>                [multiperms.command.permission.user.clear]
+* /permission user <User> info                                      [multiperms.command.permission.user.info]
+* /permission user <User> remove <Group | Permission> <Value>       [multiperms.command.permission.user.remove]
+* /permission user <User> set <Group>                               [multiperms.command.permission.set]
 ```
 
 ## Configuration
