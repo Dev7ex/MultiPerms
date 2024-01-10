@@ -28,7 +28,11 @@ public class MultiPermsHook implements PermissionHook {
                 "multiperms.command.permission.user.remove",
                 "multiperms.command.permission.user.set",
                 "multiperms.command.permission.user",
-                "multiperms.chat.colored");
+                "multiperms.chat.colored",
+                "multiperms.basic.interact",
+                "multiperms.basic.pvp",
+                "multiperms.basic.place",
+                "multiperms.basic.break");
     }
 
 }

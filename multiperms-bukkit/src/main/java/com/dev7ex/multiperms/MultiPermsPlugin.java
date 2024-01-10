@@ -8,6 +8,7 @@ import com.dev7ex.multiperms.command.PermissionCommand;
 import com.dev7ex.multiperms.group.GroupConfiguration;
 import com.dev7ex.multiperms.group.GroupService;
 import com.dev7ex.multiperms.hook.DefaultPermissionHookProvider;
+import com.dev7ex.multiperms.listener.BasicPermissionListener;
 import com.dev7ex.multiperms.listener.PlayerChatListener;
 import com.dev7ex.multiperms.listener.PlayerConnectionListener;
 import com.dev7ex.multiperms.listener.ScoreboardListener;
@@ -65,6 +66,7 @@ public class MultiPermsPlugin extends BukkitPlugin implements MultiPermsBukkitAp
 
     @Override
     public void registerListeners() {
+        super.registerListenerIf(new BasicPermissionListener(this), enableIf -> this.configuration.isBasicRightsEnabled());
         super.registerListenerIf(new PlayerChatListener(this), enableIf -> this.configuration.isChatEnabled());
         super.registerListener(new PlayerConnectionListener(this));
         super.registerListenerIf(new ScoreboardListener(this), enableIf -> this.configuration.isTablistEnabled());

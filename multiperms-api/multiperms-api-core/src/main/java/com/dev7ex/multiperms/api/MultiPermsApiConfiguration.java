@@ -14,4 +14,6 @@ public interface MultiPermsApiConfiguration {
 
     boolean isTablistEnabled();
 
+    boolean isBasicRightsEnabled();
+
 }

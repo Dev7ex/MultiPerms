@@ -11,14 +11,16 @@ config-version: ${project.version}
 # General
 prefix: '§8[§aMultiPerms§8]§r'
 no-permission: '§cIm sorry, but you do not have permission to perform this command. Please contact the server administrators if you believe that is in error.'
-no-console-command: '%prefix% §cThis player could not be found'
+no-console-command: '%prefix% §cThis command can only performed by the console'
 no-player-command: '%prefix% §cThis command can only performed by a player'
-no-player-found: '%prefix% §cDieser Spieler konnte nicht gefunden werden'
+no-player-found: '%prefix% §cThis player could not be found'
 
 settings:
   chat-enabled: true
   chat-format: '%prefix% %name% §8» §7%message%'
   tablist-enabled: true
+  basic-rights-enabled: false
+  
 
 messages:
   commands:
