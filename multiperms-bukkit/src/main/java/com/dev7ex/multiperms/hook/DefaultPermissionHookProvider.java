@@ -28,8 +28,8 @@ public class DefaultPermissionHookProvider implements PluginService, PermissionH
 
     @Override
     public void onEnable() {
-        this.register(MultiPermsPlugin.getInstance(), new BukkitPermissionHook());
-        this.register(JavaPlugin.getPlugin(BukkitCommonPlugin.class), new MultiPermsHook());
+        this.register(MultiPermsPlugin.getInstance(), new MultiPermsHook());
+        this.register(JavaPlugin.getPlugin(BukkitCommonPlugin.class), new BukkitPermissionHook());
     }
 
     @Override
