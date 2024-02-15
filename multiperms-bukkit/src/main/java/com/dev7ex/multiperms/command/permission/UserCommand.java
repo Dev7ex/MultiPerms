@@ -35,12 +35,13 @@ public class UserCommand extends BukkitCommand implements TabCompleter {
 
     @Override
     public boolean execute(@NotNull final CommandSender commandSender, @NotNull final String[] arguments) {
-        if ((arguments.length == 1) || (arguments.length > 7)) {
+        if ((arguments.length < 3) || (arguments.length > 7)) {
             return super.getSubCommand("help").orElseThrow().execute(commandSender, arguments);
         }
 
         if (Bukkit.getPlayer(arguments[1]) == null) {
-            commandSender.sendMessage("player not found");
+            commandSender.sendMessage(super.getConfiguration().getString("no-player-found")
+                    .replaceAll("%prefix%", super.getPrefix()));
             return true;
         }
 
