@@ -20,7 +20,6 @@ settings:
   chat-format: '%prefix% %name% §8» §7%message%'
   tablist-enabled: true
   basic-rights-enabled: false
-  
 
 messages:
   commands:
