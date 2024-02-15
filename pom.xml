@@ -7,7 +7,7 @@
     <groupId>com.dev7ex</groupId>
     <artifactId>multiperms</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.2-SNAPSHOT</version>
     <name>MultiPerms</name>
 
     <modules>
