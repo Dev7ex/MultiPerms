@@ -8,12 +8,13 @@
     <modules>
         <module>multiperms-api-core</module>
         <module>multiperms-api-bukkit</module>
+        <module>multiperms-api-bungeecord</module>
     </modules>
 
     <parent>
         <artifactId>multiperms</artifactId>
         <groupId>com.dev7ex</groupId>
-        <version>1.0.2-SNAPSHOT</version>
+        <version>1.0.3-SNAPSHOT</version>
     </parent>
 
     <name>MultiPerms-API</name>
