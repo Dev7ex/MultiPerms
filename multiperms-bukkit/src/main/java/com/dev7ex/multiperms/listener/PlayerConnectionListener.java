@@ -1,6 +1,6 @@
 package com.dev7ex.multiperms.listener;
 
-import com.dev7ex.common.map.ParsedMap;
+import com.dev7ex.common.collect.map.ParsedMap;
 import com.dev7ex.multiperms.MultiPermsPlugin;
 import com.dev7ex.multiperms.api.bukkit.MultiPermsBukkitApi;
 import com.dev7ex.multiperms.api.bukkit.event.MultiPermsListener;

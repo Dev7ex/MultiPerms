@@ -10,7 +10,7 @@ name: MultiPerms
 prefix: MultiPerms
 softdepend: [ PlaceholderAPI ]
 version: ${project.version}
-website: ${project.url}
+website: https://github.com/Dev7ex/MultiPerms
 commands:
   permission:
     aliases: [ multiperms, mp, perms ]

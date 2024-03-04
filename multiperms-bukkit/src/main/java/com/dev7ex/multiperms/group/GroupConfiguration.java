@@ -1,12 +1,13 @@
 package com.dev7ex.multiperms.group;
 
-import com.dev7ex.common.bukkit.configuration.ConfigurationBase;
-import com.dev7ex.common.bukkit.configuration.ConfigurationProperties;
-import com.dev7ex.common.map.ParsedMap;
+import com.dev7ex.common.collect.map.ParsedMap;
+import com.dev7ex.common.io.file.configuration.Configuration;
+import com.dev7ex.common.io.file.configuration.ConfigurationHolder;
+import com.dev7ex.common.io.file.configuration.ConfigurationProperties;
+import com.dev7ex.common.io.file.configuration.YamlConfiguration;
 import com.dev7ex.multiperms.api.group.PermissionGroup;
 import com.dev7ex.multiperms.api.group.PermissionGroupConfiguration;
 import com.dev7ex.multiperms.api.group.PermissionGroupProperty;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -15,11 +16,11 @@ import java.util.*;
  * @author Dev7ex
  * @since 03.07.2023
  */
-@ConfigurationProperties(fileName = "group.yml")
-public class GroupConfiguration extends ConfigurationBase implements PermissionGroupConfiguration {
+@ConfigurationProperties(fileName = "group.yml", provider = YamlConfiguration.class)
+public class GroupConfiguration extends Configuration implements PermissionGroupConfiguration {
 
-    public GroupConfiguration(@NotNull final Plugin plugin) {
-        super(plugin);
+    public GroupConfiguration(@NotNull final ConfigurationHolder configurationHolder) {
+        super(configurationHolder);
     }
 
     public void load() {
@@ -197,7 +198,7 @@ public class GroupConfiguration extends ConfigurationBase implements PermissionG
     public Map<Integer, PermissionGroup> getGroups() {
         final Map<Integer, PermissionGroup> groups = new HashMap<>();
 
-        for (final String groupIdentification : super.getFileConfiguration().getKeys(false)) {
+        for (final String groupIdentification : super.getFileConfiguration().getKeys()) {
             final Group group = Group.builder()
                     .setIdentification(Integer.parseInt(groupIdentification))
                     .setName(super.getFileConfiguration().getString(groupIdentification + "." + PermissionGroupProperty.NAME.getStoragePath()))

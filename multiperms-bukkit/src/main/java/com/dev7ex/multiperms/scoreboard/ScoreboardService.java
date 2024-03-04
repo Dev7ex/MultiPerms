@@ -1,6 +1,6 @@
 package com.dev7ex.multiperms.scoreboard;
 
-import com.dev7ex.common.bukkit.plugin.service.PluginService;
+import com.dev7ex.common.bukkit.plugin.module.PluginModule;
 import com.dev7ex.multiperms.MultiPermsPlugin;
 import com.dev7ex.multiperms.api.group.PermissionGroup;
 import com.dev7ex.multiperms.api.user.PermissionUser;
@@ -17,7 +17,7 @@ import java.util.Objects;
  * @author Dev7ex
  * @since 03.07.2023
  */
-public record ScoreboardService(GroupService groupProvider) implements PluginService {
+public record ScoreboardService(GroupService groupProvider) implements PluginModule {
 
     @Override
     public void onEnable() {

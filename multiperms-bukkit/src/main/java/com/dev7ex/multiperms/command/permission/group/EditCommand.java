@@ -1,9 +1,10 @@
 package com.dev7ex.multiperms.command.permission.group;
 
 import com.dev7ex.common.bukkit.command.BukkitCommand;
-import com.dev7ex.common.bukkit.command.CommandProperties;
+import com.dev7ex.common.bukkit.command.BukkitCommandProperties;
+import com.dev7ex.common.bukkit.command.completer.BukkitTabCompleter;
 import com.dev7ex.common.bukkit.plugin.BukkitPlugin;
-import com.dev7ex.common.map.ParsedMap;
+import com.dev7ex.common.collect.map.ParsedMap;
 import com.dev7ex.multiperms.MultiPermsPlugin;
 import com.dev7ex.multiperms.api.bukkit.event.group.PermissionGroupEditEvent;
 import com.dev7ex.multiperms.api.group.PermissionGroup;
@@ -12,9 +13,7 @@ import com.dev7ex.multiperms.api.group.PermissionGroupProperty;
 import com.dev7ex.multiperms.api.group.PermissionGroupProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -27,27 +26,27 @@ import java.util.stream.Collectors;
  * @author Dev7ex
  * @since 03.07.2023
  */
-@CommandProperties(name = "edit", permission = "multiperms.command.permission.group.edit")
-public class EditCommand extends BukkitCommand implements TabCompleter {
+@BukkitCommandProperties(name = "edit", permission = "multiperms.command.permission.group.edit")
+public class EditCommand extends BukkitCommand implements BukkitTabCompleter {
 
     public EditCommand(@NotNull final BukkitPlugin plugin) {
         super(plugin);
     }
 
     @Override
-    public boolean execute(@NotNull final CommandSender commandSender, @NotNull final String[] arguments) {
+    public void execute(@NotNull final CommandSender commandSender, @NotNull final String[] arguments) {
         if (arguments.length != 5) {
             commandSender.sendMessage(super.getConfiguration().getString("messages.commands.permission.group.edit.usage")
-                    .replaceAll("%prefix%", super.getPrefix()));
-            return true;
+                    .replaceAll("%prefix%", super.getConfiguration().getPrefix()));
+            return;
         }
         final PermissionGroupProvider groupProvider = MultiPermsPlugin.getInstance().getGroupProvider();
         final PermissionGroupConfiguration groupConfiguration = MultiPermsPlugin.getInstance().getGroupConfiguration();
 
         if (groupProvider.getGroup(arguments[2].toLowerCase()).isEmpty()) {
             commandSender.sendMessage(super.getConfiguration().getString("messages.general.group-not-exists")
-                    .replaceAll("%prefix%", super.getPrefix()));
-            return true;
+                    .replaceAll("%prefix%", super.getConfiguration().getPrefix()));
+            return;
         }
         final PermissionGroup permissionGroup = groupProvider.getGroup(arguments[2].toLowerCase()).get();
         final Optional<PermissionGroupProperty> propertyOptional = PermissionGroupProperty.fromString(arguments[3].toUpperCase());
@@ -55,8 +54,8 @@ public class EditCommand extends BukkitCommand implements TabCompleter {
 
         if (propertyOptional.isEmpty()) {
             commandSender.sendMessage(super.getConfiguration().getString("messages.commands.permission.group.edit.property-not-exists")
-                    .replaceAll("%prefix%", super.getPrefix()));
-            return true;
+                    .replaceAll("%prefix%", super.getConfiguration().getPrefix()));
+            return;
         }
         final PermissionGroupProperty property = propertyOptional.get();
 
@@ -65,8 +64,8 @@ public class EditCommand extends BukkitCommand implements TabCompleter {
 
         if (property == PermissionGroupProperty.PERMISSIONS) {
             commandSender.sendMessage(super.getConfiguration().getString("messages.general.function-not-available")
-                    .replaceAll("%prefix%", super.getPrefix()));
-            return true;
+                    .replaceAll("%prefix%", super.getConfiguration().getPrefix()));
+            return;
         }
 
         switch (property) {
@@ -83,8 +82,8 @@ public class EditCommand extends BukkitCommand implements TabCompleter {
             case COLOR -> {
                 if (ChatColor.getByChar(arguments[4].replaceAll("§", "").charAt(0)) == null) {
                     commandSender.sendMessage(super.getConfiguration().getString("messages.commands.permission.group.edit.invalid-color")
-                            .replaceAll("%prefix%", super.getPrefix()));
-                    return true;
+                            .replaceAll("%prefix%", super.getConfiguration().getPrefix()));
+                    return;
                 }
                 permissionGroup.setColor(arguments[4].charAt(0));
                 groupData.put(PermissionGroupProperty.COLOR, arguments[4].charAt(0));
@@ -102,16 +101,15 @@ public class EditCommand extends BukkitCommand implements TabCompleter {
             }
         }
         commandSender.sendMessage(super.getConfiguration().getString("messages.commands.permission.group.edit.successfully-edited")
-                .replaceAll("%prefix%", super.getPrefix())
+                .replaceAll("%prefix%", super.getConfiguration().getPrefix())
                 .replaceAll("%group_property%", property.toString())
                 .replaceAll("%value%", arguments[4]));
         groupProvider.saveGroup(permissionGroup);
-        return true;
+        return;
     }
 
     @Override
-    public final List<String> onTabComplete(@NotNull final CommandSender commandSender, @NotNull final Command command,
-                                            @NotNull final String commandLabel, @NotNull final String[] arguments) {
+    public final List<String> onTabComplete(@NotNull final CommandSender commandSender, @NotNull final String[] arguments) {
         if (arguments.length == 3) {
             return MultiPermsPlugin.getInstance().getGroupProvider().getGroups().values().stream().map(PermissionGroup::getName).toList();
         }

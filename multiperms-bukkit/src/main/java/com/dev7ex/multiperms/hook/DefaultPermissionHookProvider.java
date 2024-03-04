@@ -1,7 +1,7 @@
 package com.dev7ex.multiperms.hook;
 
 import com.dev7ex.common.bukkit.BukkitCommonPlugin;
-import com.dev7ex.common.bukkit.plugin.service.PluginService;
+import com.dev7ex.common.bukkit.plugin.module.PluginModule;
 import com.dev7ex.multiperms.MultiPermsPlugin;
 import com.dev7ex.multiperms.api.bukkit.hook.BukkitPermissionHook;
 import com.dev7ex.multiperms.api.hook.PermissionHook;
@@ -22,7 +22,7 @@ import java.util.Map;
  * @since 03.08.2023
  */
 @Getter(AccessLevel.PUBLIC)
-public class DefaultPermissionHookProvider implements PluginService, PermissionHookProvider<Plugin> {
+public class DefaultPermissionHookProvider implements PluginModule, PermissionHookProvider<Plugin> {
 
     private final Map<Plugin, PermissionHook> permissionHooks = new HashMap<>();
 

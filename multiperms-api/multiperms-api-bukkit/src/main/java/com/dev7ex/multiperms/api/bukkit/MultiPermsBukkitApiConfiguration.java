@@ -1,6 +1,7 @@
 package com.dev7ex.multiperms.api.bukkit;
 
 import com.dev7ex.common.bukkit.plugin.configuration.DefaultPluginConfiguration;
+import com.dev7ex.common.io.file.configuration.ConfigurationHolder;
 import com.dev7ex.multiperms.api.MultiPermsApiConfiguration;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -13,14 +14,14 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class MultiPermsBukkitApiConfiguration extends DefaultPluginConfiguration implements MultiPermsApiConfiguration {
 
-    public MultiPermsBukkitApiConfiguration(@NotNull final Plugin plugin) {
-        super(plugin);
+    public MultiPermsBukkitApiConfiguration(@NotNull final ConfigurationHolder configurationHolder) {
+        super(configurationHolder);
     }
 
     @Getter(AccessLevel.PUBLIC)
     public enum Entry {
 
-        PREFIX("prefix", "§8[§bMultiWorld§8]§r", false),
+        PREFIX("prefix", "§8[§aMultiPerms§8]§r", false),
         NO_PERMISSION("no-permission",
                 "§cIm sorry, but you do not have permission to perform this command. Please contact the server administrators if you believe that is in error.", false),
         NO_CONSOLE_COMMAND("no-console-command", "%prefix% §cThis command can only performed by the console", false),

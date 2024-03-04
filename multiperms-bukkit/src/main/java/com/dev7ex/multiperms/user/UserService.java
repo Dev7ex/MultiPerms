@@ -1,7 +1,7 @@
 package com.dev7ex.multiperms.user;
 
-import com.dev7ex.common.bukkit.plugin.service.PluginService;
-import com.dev7ex.common.map.ParsedMap;
+import com.dev7ex.common.bukkit.plugin.module.PluginModule;
+import com.dev7ex.common.collect.map.ParsedMap;
 import com.dev7ex.multiperms.MultiPermsPlugin;
 import com.dev7ex.multiperms.api.group.PermissionGroup;
 import com.dev7ex.multiperms.api.group.PermissionGroupProvider;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  * @since 03.07.2023
  */
 @Getter(AccessLevel.PUBLIC)
-public class UserService implements PluginService, PermissionUserProvider {
+public class UserService implements PluginModule, PermissionUserProvider {
 
     private final Map<UUID, PermissionUser> users = new HashMap<>();
     private final PermissionGroupProvider groupProvider;

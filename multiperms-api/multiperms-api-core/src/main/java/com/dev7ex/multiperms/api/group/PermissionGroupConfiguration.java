@@ -1,6 +1,6 @@
 package com.dev7ex.multiperms.api.group;
 
-import com.dev7ex.common.map.ParsedMap;
+import com.dev7ex.common.collect.map.ParsedMap;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;

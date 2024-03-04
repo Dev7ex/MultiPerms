@@ -1,7 +1,9 @@
 package com.dev7ex.multiperms;
 
 import com.dev7ex.common.bukkit.plugin.BukkitPlugin;
-import com.dev7ex.common.bukkit.plugin.PluginProperties;
+import com.dev7ex.common.bukkit.plugin.ConfigurablePlugin;
+import com.dev7ex.common.bukkit.plugin.PluginIdentification;
+import com.dev7ex.common.bukkit.plugin.statistic.PluginStatisticProperties;
 import com.dev7ex.multiperms.api.MultiPermsApiProvider;
 import com.dev7ex.multiperms.api.bukkit.MultiPermsBukkitApi;
 import com.dev7ex.multiperms.command.PermissionCommand;
@@ -16,6 +18,7 @@ import com.dev7ex.multiperms.scoreboard.ScoreboardService;
 import com.dev7ex.multiperms.user.UserService;
 import lombok.AccessLevel;
 import lombok.Getter;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -25,8 +28,9 @@ import java.io.File;
  * @since 03.07.2023
  */
 @Getter(AccessLevel.PUBLIC)
-@PluginProperties(metrics = true, metricsId = 19393)
-public class MultiPermsPlugin extends BukkitPlugin implements MultiPermsBukkitApi {
+@PluginIdentification(spigotResourceId = 111992)
+@PluginStatisticProperties(enabled = true, identification = 19393)
+public class MultiPermsPlugin extends BukkitPlugin implements MultiPermsBukkitApi, ConfigurablePlugin {
 
     private MultiPermsConfiguration configuration;
     private GroupConfiguration groupConfiguration;
@@ -52,6 +56,7 @@ public class MultiPermsPlugin extends BukkitPlugin implements MultiPermsBukkitAp
     @Override
     public void onEnable() {
         MultiPermsApiProvider.registerApi(this);
+        super.getServer().getServicesManager().register(MultiPermsBukkitApi.class, this, this, ServicePriority.Normal);
     }
 
     @Override
@@ -73,11 +78,11 @@ public class MultiPermsPlugin extends BukkitPlugin implements MultiPermsBukkitAp
     }
 
     @Override
-    public void registerServices() {
-        super.registerService(this.groupProvider = new GroupService(this.groupConfiguration));
-        super.registerService(this.userProvider = new UserService(this.groupProvider));
-        super.registerService(this.scoreboardProvider = new ScoreboardService(this.groupProvider));
-        super.registerService(this.permissionHookProvider = new DefaultPermissionHookProvider());
+    public void registerModules() {
+        super.registerModule(this.groupProvider = new GroupService(this.groupConfiguration));
+        super.registerModule(this.userProvider = new UserService(this.groupProvider));
+        super.registerModule(this.scoreboardProvider = new ScoreboardService(this.groupProvider));
+        super.registerModule(this.permissionHookProvider = new DefaultPermissionHookProvider());
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.dev7ex.multiperms.command.permission.user;
 
 import com.dev7ex.common.bukkit.command.BukkitCommand;
-import com.dev7ex.common.bukkit.command.CommandProperties;
+import com.dev7ex.common.bukkit.command.BukkitCommandProperties;
 import com.dev7ex.common.bukkit.plugin.BukkitPlugin;
 import com.dev7ex.multiperms.MultiPermsPlugin;
 import com.dev7ex.multiperms.api.group.PermissionGroup;
@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
  * @author Dev7ex
  * @since 03.07.2023
  */
-@CommandProperties(name = "info", permission = "multiperms.command.permission.user.info")
+@BukkitCommandProperties(name = "info", permission = "multiperms.command.permission.user.info")
 public class InfoCommand extends BukkitCommand {
 
     public InfoCommand(@NotNull final BukkitPlugin plugin) {
@@ -22,18 +22,18 @@ public class InfoCommand extends BukkitCommand {
     }
 
     @Override
-    public boolean execute(@NotNull final CommandSender commandSender, @NotNull final String[] arguments) {
+    public void execute(@NotNull final CommandSender commandSender, @NotNull final String[] arguments) {
         final PermissionUser user = MultiPermsPlugin.getInstance().getUserProvider().getUser(arguments[1]).orElseThrow();
 
         super.getConfiguration().getStringList("messages.commands.permission.user.info.message").forEach(message -> {
-            commandSender.sendMessage(message.replaceAll("%prefix%", super.getPrefix())
+            commandSender.sendMessage(message.replaceAll("%prefix%", super.getConfiguration().getPrefix())
                     .replaceAll("%unique_id%", user.getUniqueId().toString())
                     .replaceAll("%colored_user_name%", user.getColoredName())
                     .replaceAll("%colored_group_name%", user.getGroup().getColoredDisplayName())
                     .replaceAll("%colored_group_names%", this.formatSubGroups(user))
                     .replaceAll("%permissions%", this.formatPermissions(user)));
         });
-        return true;
+        return;
     }
 
     public final String formatSubGroups(final PermissionUser user) {
