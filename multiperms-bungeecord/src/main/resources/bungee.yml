@@ -1,0 +1,7 @@
+author: Dev7ex
+depends: [FacilisCommon]
+description: ${project.description}
+main: com.dev7ex.multiperms.MultiPermsPlugin
+name: MultiPerms
+version: ${project.version}
+website: https://github.com/Dev7ex/MultiPerms/
