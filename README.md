@@ -10,6 +10,7 @@
 
 MultiPerms is a simple permission management system for Minecraft.
 
+* BungeeCord & Spigot Support
 * Almost 100% configurable
 * Create Custom Groups
 * Permission Per Player
@@ -22,6 +23,7 @@ MultiPerms is a simple permission management system for Minecraft.
 ## Links
 
 * https://bstats.org/plugin/bukkit/MultiPerms-Bukkit/19393
+* https://bstats.org/plugin/bungeecord/MultiPerms%-BungeeCord/21212
 * https://github.com/Dev7ex/MultiPerms
 
 ## Commands
