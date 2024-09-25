@@ -10,8 +10,8 @@
         <version>1.0.4-SNAPSHOT</version>
     </parent>
 
-    <name>MultiPerms-BungeeCord</name>
-    <artifactId>multiperms-bungeecord</artifactId>
+    <name>MultiPerms-Velocity</name>
+    <artifactId>multiperms-velocity</artifactId>
 
     <properties>
         <maven.compiler.source>${project.source.version}</maven.compiler.source>
@@ -21,40 +21,31 @@
 
     <repositories>
         <repository>
-            <id>bungeecord-repo</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <id>papermc</id>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
     </repositories>
 
     <dependencies>
         <dependency>
-            <groupId>net.md-5</groupId>
-            <artifactId>bungeecord-api</artifactId>
-            <version>1.19-R0.1-SNAPSHOT</version>
-            <type>jar</type>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>net.md-5</groupId>
-            <artifactId>bungeecord-api</artifactId>
-            <version>1.19-R0.1-SNAPSHOT</version>
-            <type>javadoc</type>
+            <groupId>com.velocitypowered</groupId>
+            <artifactId>velocity-api</artifactId>
+            <version>${dependency.velocity.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.dev7ex</groupId>
-            <artifactId>multiperms-api-bungeecord</artifactId>
-            <version>${project.version}</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.dev7ex</groupId>
-            <artifactId>facilis-common-bungeecord</artifactId>
+            <artifactId>facilis-common-velocity</artifactId>
             <version>${dependency.facilis.common.version}</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.dev7ex</groupId>
+            <artifactId>multiperms-api-velocity</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
@@ -121,7 +112,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.5.0</version>
+                <version>${maven.javadoc.plugin.version}</version>
             </plugin>
         </plugins>
     </build>

@@ -7,7 +7,7 @@
     <groupId>com.dev7ex</groupId>
     <artifactId>multiperms</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.4-SNAPSHOT</version>
     <name>MultiPerms</name>
     <description>Permission Management for Minecraft</description>
     <url>github.com/Dev7ex/MultiPerms</url>
@@ -16,25 +16,29 @@
         <module>multiperms-bukkit</module>
         <module>multiperms-api</module>
         <module>multiperms-bungeecord</module>
+        <module>multiperms-velocity</module>
     </modules>
 
     <properties>
         <maven.compiler.source>${project.source.version}</maven.compiler.source>
         <maven.compiler.target>${project.source.version}</maven.compiler.target>
 
-        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
+        <project.source.version>17</project.source.version>
+        <project.source.encoding>UTF-8</project.source.encoding>
 
-        <dependency.annotations-version>24.0.1</dependency.annotations-version>
-        <dependency.facilis-common-version>1.0.5-SNAPSHOT</dependency.facilis-common-version>
-        <dependency-commons-io-version>2.11.0</dependency-commons-io-version>
-        <dependency.lombok-version>1.18.26</dependency.lombok-version>
-        <dependency-spigot-api-version>1.16.5-R0.1-SNAPSHOT</dependency-spigot-api-version>
-        <dependency-maven-artifact-version>3.9.0</dependency-maven-artifact-version>
-        <dependency-placeholder-api-version>2.11.3</dependency-placeholder-api-version>
-        <dependency.bungeecord-version>1.19-R0.1-SNAPSHOT</dependency.bungeecord-version>
+        <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
+        <maven.shade.plugin.version>3.6.0</maven.shade.plugin.version>
+        <maven.javadoc.plugin.version>3.8.0</maven.javadoc.plugin.version>
 
-        <project.source.version>16</project.source.version>
+        <dependency.annotations.version>24.0.1</dependency.annotations.version>
+        <dependency.bungeecord-version>1.20-R0.2</dependency.bungeecord-version>
+        <dependency.commons.io.version>2.17.0 </dependency.commons.io.version>
+        <dependency.facilis.common.version>1.0.6-SNAPSHOT</dependency.facilis.common.version>
+        <dependency.lombok.version>1.18.30</dependency.lombok.version>
+        <dependency.placeholder.api.version>2.11.3</dependency.placeholder.api.version>
+        <dependency.spigot.api.version>1.16.5-R0.1-SNAPSHOT</dependency.spigot.api.version>
+        <dependency.velocity.version>3.3.0-SNAPSHOT</dependency.velocity.version>
+
     </properties>
 
 </project>
