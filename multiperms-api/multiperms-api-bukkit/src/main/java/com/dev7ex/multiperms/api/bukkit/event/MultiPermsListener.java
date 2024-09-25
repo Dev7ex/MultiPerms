@@ -2,6 +2,7 @@ package com.dev7ex.multiperms.api.bukkit.event;
 
 import com.dev7ex.multiperms.api.MultiPermsApiConfiguration;
 import com.dev7ex.multiperms.api.bukkit.MultiPermsBukkitApi;
+import com.dev7ex.multiperms.api.bukkit.translation.BukkitTranslationProvider;
 import com.dev7ex.multiperms.api.group.PermissionGroupProvider;
 import com.dev7ex.multiperms.api.user.PermissionUserProvider;
 import org.bukkit.event.Listener;
@@ -23,12 +24,12 @@ public abstract class MultiPermsListener implements Listener {
         return this.multiPermsApi.getConfiguration();
     }
 
-    public String getPrefix() {
-        return this.multiPermsApi.getConfiguration().getPrefix();
-    }
-
     public PermissionGroupProvider getGroupProvider() {
         return this.multiPermsApi.getGroupProvider();
+    }
+
+    public BukkitTranslationProvider getTranslationProvider() {
+        return this.multiPermsApi.getTranslationProvider();
     }
 
     public PermissionUserProvider getUserProvider() {
