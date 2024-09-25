@@ -5,7 +5,6 @@ import com.dev7ex.common.io.file.configuration.ConfigurationHolder;
 import com.dev7ex.multiperms.api.MultiPermsApiConfiguration;
 import lombok.AccessLevel;
 import lombok.Getter;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 /**

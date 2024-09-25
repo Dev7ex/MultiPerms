@@ -2,9 +2,6 @@ package com.dev7ex.multiperms.api;
 
 import com.dev7ex.common.bungeecord.plugin.ConfigurablePlugin;
 import com.dev7ex.common.bungeecord.plugin.configuration.DefaultPluginConfiguration;
-import com.dev7ex.common.io.file.configuration.Configuration;
-import com.dev7ex.common.io.file.configuration.ConfigurationHolder;
-import com.dev7ex.multiperms.api.MultiPermsApiConfiguration;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
