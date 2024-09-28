@@ -23,12 +23,12 @@ import java.util.stream.Collectors;
  * @since 03.07.2023
  */
 @Getter(AccessLevel.PUBLIC)
-public class UserService implements PluginModule, PermissionUserProvider {
+public class UserProvider implements PluginModule, PermissionUserProvider {
 
     private final Map<UUID, PermissionUser> users = new HashMap<>();
     private final PermissionGroupProvider groupProvider;
 
-    public UserService(final PermissionGroupProvider groupProvider) {
+    public UserProvider(final PermissionGroupProvider groupProvider) {
         this.groupProvider = groupProvider;
     }
 

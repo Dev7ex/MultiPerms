@@ -4,7 +4,7 @@ import com.dev7ex.common.bukkit.plugin.module.PluginModule;
 import com.dev7ex.multiperms.MultiPermsPlugin;
 import com.dev7ex.multiperms.api.group.PermissionGroup;
 import com.dev7ex.multiperms.api.user.PermissionUser;
-import com.dev7ex.multiperms.group.GroupService;
+import com.dev7ex.multiperms.group.GroupProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -17,7 +17,7 @@ import java.util.Objects;
  * @author Dev7ex
  * @since 03.07.2023
  */
-public record ScoreboardModule(GroupService groupProvider) implements PluginModule {
+public record ScoreboardModule(GroupProvider groupProvider) implements PluginModule {
 
     @Override
     public void onEnable() {

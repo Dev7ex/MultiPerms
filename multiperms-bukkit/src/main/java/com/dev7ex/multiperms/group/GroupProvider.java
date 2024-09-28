@@ -22,12 +22,12 @@ import java.util.*;
  * @since 03.07.2023
  */
 @Getter(AccessLevel.PUBLIC)
-public class GroupService implements PluginModule, PermissionGroupProvider {
+public class GroupProvider implements PluginModule, PermissionGroupProvider {
 
     private final Map<Integer, PermissionGroup> groups = new HashMap<>();
     private final PermissionGroupConfiguration configuration;
 
-    public GroupService(@NotNull final PermissionGroupConfiguration configuration) {
+    public GroupProvider(@NotNull final PermissionGroupConfiguration configuration) {
         this.configuration = configuration;
     }
 
