@@ -1,5 +1,8 @@
 package com.dev7ex.multiperms.api;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 /**
  * Provides the configuration settings for the MultiPerms API.
  * This interface defines various options related to the system's
@@ -13,37 +16,25 @@ public interface MultiPermsApiConfiguration {
     /**
      * Retrieves the prefix used within the MultiPerms system.
      *
-     * @return A {@link String} representing the prefix.
+     * @return A {@link String} representing the prefix, typically displayed in chat or log messages.
      */
     String getPrefix();
 
     /**
-     * Retrieves the format used for chat messages within the system.
+     * Retrieves the default locale used by the MultiPerms system.
      *
-     * @return A {@link String} representing the chat format.
+     * @return A {@link Locale} object representing the system's default locale
+     *         for messages and other localized content.
      */
-    String getChatFormat();
+    Locale getDefaultLocale();
 
     /**
-     * Checks whether the chat functionality is enabled.
+     * Retrieves the time format used within the MultiPerms system.
      *
-     * @return A {@code boolean} value indicating whether chat is enabled.
+     * @return A {@link SimpleDateFormat} representing the time format for
+     *         displaying date and time information.
      */
-    boolean isChatEnabled();
-
-    /**
-     * Checks whether the tab list functionality is enabled.
-     *
-     * @return A {@code boolean} value indicating whether the tab list is enabled.
-     */
-    boolean isTablistEnabled();
-
-    /**
-     * Checks whether the basic rights functionality is enabled.
-     *
-     * @return A {@code boolean} value indicating whether basic rights are enabled.
-     */
-    boolean isBasicRightsEnabled();
+    SimpleDateFormat getTimeFormat();
 
 }
 
