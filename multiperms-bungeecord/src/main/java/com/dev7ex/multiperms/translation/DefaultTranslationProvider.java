@@ -15,10 +15,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;

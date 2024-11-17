@@ -1,11 +1,11 @@
 package com.dev7ex.multiperms.api.velocity;
 
+import com.dev7ex.common.velocity.command.VelocityCommand;
 import com.dev7ex.multiperms.api.MultiPermsApi;
 import com.dev7ex.multiperms.api.velocity.hook.VelocityPermissionHookProvider;
 import com.dev7ex.multiperms.api.velocity.translation.VelocityTranslationProvider;
 import com.dev7ex.multiperms.api.velocity.user.VelocityPermissionUserProvider;
 import org.jetbrains.annotations.NotNull;
-import com.dev7ex.common.velocity.command.VelocityCommand;
 
 /**
  * @author Dev7ex
