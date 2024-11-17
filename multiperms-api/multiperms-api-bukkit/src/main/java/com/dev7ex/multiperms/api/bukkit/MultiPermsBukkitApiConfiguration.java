@@ -17,20 +17,48 @@ public abstract class MultiPermsBukkitApiConfiguration extends DefaultPluginConf
         super(configurationHolder);
     }
 
+    /**
+     * Checks whether the chat functionality is enabled.
+     *
+     * @return A {@code boolean} value indicating whether chat is enabled.
+     *         If {@code true}, the system will manage chat formatting and handling.
+     */
+    public abstract boolean isChatEnabled();
+
+    /**
+     * Retrieves the format used for chat messages within the system.
+     *
+     * @return A {@link String} representing the chat format.
+     *         Placeholders such as {@code %prefix%}, {@code %name%}, and {@code %message%}
+     *         may be included for dynamic message construction.
+     */
+    public abstract String getChatFormat();
+
+    /**
+     * Checks if permission-based actions are enabled.
+     *
+     * @return {@code true} if actions are permission-restricted, {@code false} otherwise.
+     */
+    public abstract boolean isPermissionBasedActionsEnabled();
+
+    /**
+     * Checks whether the tab list functionality is enabled.
+     *
+     * @return A {@code boolean} value indicating whether the tab list is enabled.
+     */
+    public abstract boolean isTablistEnabled();
+
     @Getter(AccessLevel.PUBLIC)
     public enum Entry {
 
         PREFIX("prefix", "§8[§aMultiPerms§8]§r", false),
-        NO_PERMISSION("no-permission",
-                "§cIm sorry, but you do not have permission to perform this command. Please contact the server administrators if you believe that is in error.", false),
-        NO_CONSOLE_COMMAND("no-console-command", "%prefix% §cThis command can only performed by the console", false),
-        NO_PLAYER_COMMAND("no-player-command", "%prefix% §cThis command can only performed by a player", false),
-        NO_PLAYER_FOUND("no-player-found", "%prefix% §cThis player could not be found", false),
 
-        SETTINGS_CHAT_ENABLED("settings.chat-enabled", true, false),
-        SETTINGS_CHAT_FORMAT("settings.chat-format", "%prefix% %name% §8» §7%message%", false),
-        SETTINGS_TABLIST_ENABLED("settings.tablist-enabled", true, false),
-        SETTINGS_BASIC("settings.basic-rights-enabled", false, false);
+        SETTINGS_CHAT_ENABLED("settings.chat.enabled", false, false),
+        SETTINGS_CHAT_FORMAT("settings.chat.format", "%prefix% %name% §8» §7%message%", false),
+        SETTINGS_DEFAULT_LOCALE("settings.locale.default", "en_US", false),
+        SETTINGS_PERMISSION_BASED_ACTIONS_ENABLED("settings.permission-based-actions.enabled", false, false),
+        SETTINGS_TABLIST_ENABLED("settings.tablist.enabled", true, false),
+        SETTINGS_TIME_FORMAT("settings.time-format", "dd.MM.yyyy HH:mm:ss", false);
 
         private final String path;
         private final Object defaultValue;
