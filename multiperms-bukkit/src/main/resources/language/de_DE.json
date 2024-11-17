@@ -1,0 +1,141 @@
+{
+  "general": {
+    "translator": "Dev7ex",
+    "no-permission": "§cEs tut mir leid, aber Sie haben nicht die Berechtigung, diesen Befehl auszuführen. Bitte wenden Sie sich an die Serveradministratoren, wenn Sie glauben, dass dies ein Fehler ist.",
+    "no-console-command": "%prefix% §cDer Befehl §6%command_name% §ckann nur von einem Spieler ausgeführt werden!",
+    "no-player-command": "%prefix% §cDer Befehl §6%command_name% §ckann nur von der Konsole ausgeführt werden!",
+    "no-player-found": "%prefix% §cDer Spieler §6%player_name% §cwurde nicht gefunden",
+    "invalid-number": "%prefix% §cBitte gebe eine gültige Zahl an",
+    "group": {
+      "already-exists": "%prefix% §cEs existiert bereits eine Gruppe mit dem Namen %group_name%",
+      "already-exists-id": "%prefix% §cDie Gruppe %colored_group_name% §chat bereits diese ID",
+      "delete-locked": "%prefix% §cDie Gruppe %colored_group_name% §cdarf nicht gelöscht werden",
+      "not-exists": "%prefix% §cDie Gruppe %group_name% existiert nicht"
+    }
+  },
+  "commands": {
+    "permission": {
+      "group": {
+        "add": {
+          "usage": "%prefix% §cSyntax: /permission group add <Gruppe> <Permission>",
+          "group-has-permission": "%prefix% §7Die Gruppe %colored_group_name% §7hat die Permission §a%permission% §7bereits",
+          "successfully-added": "%prefix% §7Du hast der Gruppe %colored_group_name% §7die Permission §a%permission% §7hinzugefügt"
+        },
+        "create": {
+          "usage": "%prefix% §cSyntax: /permission group create <Name> <Identification>",
+          "successfully-created": "%prefix% §7Die Gruppe %colored_group_name% §7wurde §aerstellt"
+        },
+        "delete": {
+          "usage": "%prefix% §cSyntax: /permission group delete <Gruppe>",
+          "successfully-deleted": "%prefix% §7Die Gruppe %colored_group_name% §7wurde erfolgreich §cgelöscht"
+        },
+        "edit": {
+          "usage": "%prefix% §cSyntax: /permission group edit <Gruppe> <Eigenschaft> <Wert>",
+		  "property-locked": "%prefix% §7Die Gruppen Eigenschaft §a%group_property% §7kann nicht über diese Funktion verändert werden",
+          "property-not-exists": "%prefix% §7Die Gruppen Eigenschaft §a%group_property% §7existiert nicht",
+          "invalid-color": "%prefix% §7Es existiert kein Farbecode mit der Kennung §a%color_argument%",
+          "successfully-edited": "%prefix% §7Die Eigenschaft §a%group_property% §7von der Gruppe %colored_group_name% §7wurde auf §a%value% §7gesetzt"
+        },
+        "list": {
+          "usage": "%prefix% §cSyntax: /permission group list",
+          "message": "%prefix% §7Gruppen: %colored_group_names%"
+        },
+        "remove": {
+          "usage": "%prefix% §cSyntax: /permission group remove <Gruppe> <Permission>",
+          "group-has-permission-not": "%prefix% §7Die Gruppe %colored_group_name% §7hat die Permission §a%permission% §7nicht",
+          "successfully-removed": "%prefix% §7Du hast der Gruppe %colored_group_name% §7die Permission §a%permission% §7entfernt"
+        }
+      },
+      "help": {
+        "message": [
+          "",
+          "§f§m                         §r %prefix% §f§m                         ",
+          "",
+          "§7» §7/permission §agroup §7add <Gruppe> <Permission>",
+          "§7» §7/permission §agroup §7create <Name> <Identification>",
+          "§7» §7/permission §agroup §7delete §7<Name>",
+          "§7» §7/permission §agroup §7edit §7<Gruppe> <Eigenschaft> <Wert>",
+          "§7» §7/permission §agroup §7list",
+          "§7» §7/permission §agroup §7remove <Group> <Permission>",
+          "",
+          "§7» §7/permission §areload",
+          "",
+          "§7» §7/permission §auser §7<User> §aadd §7<Gruppe | Permission> <Wert>",
+          "§7» §7/permission §auser §7<User> §aremove §7<Gruppe | Permission> <Wert>",
+          "§7» §7/permission §auser §7<User> §ainfo",
+          "§7» §7/permission §auser §7<User> §aset §7<Gruppe>",
+          "§7» §7/permission §auser §7<User> §aclear §7<Gruppe | Permission>",
+          "",
+          "§7» §7/permission §aversion",
+          "",
+          "§f§m                         §r %prefix% §f§m                         ",
+          ""
+        ]
+      },
+      "reload": {
+        "usage": "%prefix% §cSyntax: /permission reload",
+        "message": "%prefix% §7Die Konfiguration wurde erfolgreich neu geladen"
+      },
+      "user": {
+        "add": {
+          "usage": "%prefix% §cSyntax: /permission user <User> add <Gruppe | Permission> <Wert>",
+          "group": {
+            "main-group": "%prefix% §7Du kannst %colored_user_name% §7die Gruppe %colored_group_name% §7nicht hinzufügen da dies die Hauptgruppe von diesem Spieler ist",
+            "user-has-group": "%prefix% %colored_user_name% §7hat die Gruppe %colored_group_name% §7bereits",
+            "successfully-added": "%prefix% §7Du hast %colored_user_name% §7die Gruppe %colored_group_name% §7hinzugefügt"
+          },
+          "permission": {
+            "user-has-permission": "%prefix% %colored_user_name% §7hat die Permission §a%permission% §7bereits",
+            "successfully-added": "%prefix% §7Du hast %colored_user_name% §7die Permission §a%permission% §7hinzugefügt"
+          }
+        },
+        "clear": {
+          "usage": "%prefix% §cSyntax: /permission user <User> clear <Gruppe | Permission>",
+          "group": {
+            "user-groups-empty": "%prefix% %colored_user_name% §7hat keine Untergruppen",
+            "successfully-cleared": "%prefix% §7Du hast %colored_user_name% §7alle Untergruppen entfernt"
+          },
+          "permission": {
+            "user-permissions-empty": "%prefix% %colored_user_name% §7hat keine Permissions",
+            "successfully-cleared": "%prefix% §7Du hast %colored_user_name% §7alle Permissions entfernt"
+          }
+        },
+        "info": {
+          "usage": "%prefix% §cSyntax: /permission user <User> info",
+          "message": [
+            "",
+            "§f§m                    §r %colored_user_name% §f§m                    ",
+            "",
+            "§7» §7UUID: §a%unique_id%",
+            "§7» §7Name: §a%colored_user_name%",
+            "§7» §7Erster Login: §a%first_login%",
+            "§7» §7Letzter Login: §a%last_login%",
+            "§7» §7Gruppe: §a%colored_group_name%",
+            "§7» §7Permissions: §a%permissions%",
+            "§7» §7SubGroups: §a%colored_group_names%",
+            "",
+            "§f§m                    §r %colored_user_name% §f§m                    ",
+            ""
+          ]
+        },
+        "remove": {
+          "usage": "%prefix% §cSyntax: /permission user <User> remove <Gruppe | Permission> <Wert>",
+          "group": {
+            "main-group": "%prefix% §7Du kannst %colored_user_name% §7die Gruppe %colored_group_name% §7nicht entferne da dies die Hauptgruppe von diesem Spieler ist",
+            "user-has-group-not": "%prefix% %colored_user_name% §7hat die Gruppe %colored_group_name% §7nicht",
+            "successfully-removed": "%prefix% §7Du hast %colored_user_name% §7die Gruppe %colored_group_name% §7entfernt"
+          },
+          "permission": {
+            "user-has-permission-not": "%prefix% %colored_user_name% §7hat die Permission §a%permission% §7nicht",
+            "successfully-removed": "%prefix% §7Du hast %colored_user_name% §7die Permission §a%permission% §7entfernt"
+          }
+        },
+        "set": {
+          "usage": "%prefix% §cSyntax: /permission user <User> set <Gruppe>",
+          "user-has-group": "%prefix% %colored_user_name% §7befindet sich bereits in der Gruppe %colored_group_name%",
+          "successfully-set": "%prefix% §7Du hast %colored_user_name% §7die Gruppe %colored_group_name% §7gesetzt"
+        }
+      }
+    }
+  }
+}

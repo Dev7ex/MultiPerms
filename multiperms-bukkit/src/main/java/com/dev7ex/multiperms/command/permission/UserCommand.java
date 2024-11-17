@@ -3,8 +3,9 @@ package com.dev7ex.multiperms.command.permission;
 import com.dev7ex.common.bukkit.command.BukkitCommand;
 import com.dev7ex.common.bukkit.command.BukkitCommandProperties;
 import com.dev7ex.common.bukkit.command.completer.BukkitTabCompleter;
-import com.dev7ex.common.bukkit.plugin.BukkitPlugin;
+import com.dev7ex.multiperms.MultiPermsPlugin;
 import com.dev7ex.multiperms.command.permission.user.*;
+import com.dev7ex.multiperms.translation.DefaultTranslationProvider;
 import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -22,8 +23,12 @@ import java.util.Objects;
 @BukkitCommandProperties(name = "user", permission = "multiperms.command.permission.user")
 public class UserCommand extends BukkitCommand implements BukkitTabCompleter {
 
-    public UserCommand(@NotNull final BukkitPlugin plugin) {
+    private final DefaultTranslationProvider translationProvider;
+
+    public UserCommand(@NotNull final MultiPermsPlugin plugin) {
         super(plugin);
+
+        this.translationProvider = plugin.getTranslationProvider();
 
         super.registerSubCommand(new AddCommand(plugin));
         super.registerSubCommand(new ClearCommand(plugin));
@@ -41,8 +46,9 @@ public class UserCommand extends BukkitCommand implements BukkitTabCompleter {
         }
 
         if (Bukkit.getPlayer(arguments[1]) == null) {
-            commandSender.sendMessage(super.getConfiguration().getString("no-player-found")
-                    .replaceAll("%prefix%", super.getConfiguration().getPrefix()));
+            commandSender.sendMessage(this.translationProvider.getMessage(commandSender, "general.no-player-found")
+                    .replaceAll("%prefix%", super.getConfiguration().getPrefix())
+                    .replaceAll("%player_name%", arguments[1]));
             return;
         }
 
@@ -50,7 +56,15 @@ public class UserCommand extends BukkitCommand implements BukkitTabCompleter {
             Objects.requireNonNull(super.getSubCommand(HelpCommand.class)).execute(commandSender, arguments);
             return;
         }
-        super.getSubCommand(arguments[2].toLowerCase()).get().execute(commandSender, arguments);
+        final BukkitCommand subCommand = super.getSubCommand(arguments[2].toLowerCase())
+                .get();
+
+        if (!commandSender.hasPermission(subCommand.getPermission())) {
+            commandSender.sendMessage(this.translationProvider.getMessage(commandSender, "general.no-permission")
+                    .replaceAll("%prefix%", super.getConfiguration().getPrefix()));
+            return;
+        }
+        subCommand.execute(commandSender, arguments);
     }
 
     @Override
@@ -64,8 +78,12 @@ public class UserCommand extends BukkitCommand implements BukkitTabCompleter {
         if (super.getSubCommand(arguments[2].toLowerCase()).isEmpty()) {
             return Collections.emptyList();
         }
-        final BukkitCommand subCommand = super.getSubCommand(arguments[2].toLowerCase()).get();
+        final BukkitCommand subCommand = super.getSubCommand(arguments[2].toLowerCase())
+                .get();
 
+        if (!commandSender.hasPermission(subCommand.getPermission())) {
+            return Collections.emptyList();
+        }
         if (!(subCommand instanceof BukkitTabCompleter)) {
             return Collections.emptyList();
         }

@@ -1,6 +1,6 @@
 ### MultiPerms Version 1.1.0
 
-- **Adding**: Added support for customizing the plugin in multiple languages.
+- **Adding**: support for multiple languages
 - **Adding**: JavaDoc comments for various classes.
 - **Adding**: Added several PermissionHooks. A wide range of standard Minecraft permissions are now displayed.
 - **Adding**: Introduced the ability to distinguish between different classes in BungeeCord and Bukkit.

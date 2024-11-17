@@ -1,10 +1,11 @@
 package com.dev7ex.multiperms.command.permission.group;
 
-import com.dev7ex.common.bungeecord.command.ProxyCommand;
-import com.dev7ex.common.bungeecord.command.ProxyCommandProperties;
-import com.dev7ex.common.bungeecord.plugin.ProxyPlugin;
+import com.dev7ex.common.bungeecord.command.BungeeCommand;
+import com.dev7ex.common.bungeecord.command.BungeeCommandProperties;
 import com.dev7ex.multiperms.MultiPermsPlugin;
 import com.dev7ex.multiperms.api.group.PermissionGroup;
+import com.dev7ex.multiperms.group.GroupProvider;
+import com.dev7ex.multiperms.translation.DefaultTranslationProvider;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -18,22 +19,28 @@ import java.util.List;
  * @author Dev7ex
  * @since 03.07.2023
  */
-@ProxyCommandProperties(name = "list", permission = "multiperms.command.permission.group.list")
-public class ListCommand extends ProxyCommand {
+@BungeeCommandProperties(name = "list", permission = "multiperms.command.permission.group.list")
+public class ListCommand extends BungeeCommand {
 
-    public ListCommand(@NotNull final ProxyPlugin plugin) {
+    private final GroupProvider groupProvider;
+    private final DefaultTranslationProvider translationProvider;
+
+    public ListCommand(@NotNull final MultiPermsPlugin plugin) {
         super(plugin);
+
+        this.groupProvider = plugin.getGroupProvider();
+        this.translationProvider = plugin.getTranslationProvider();
     }
 
     @Override
     public void execute(@NotNull final CommandSender commandSender, @NotNull final String[] arguments) {
         if (arguments.length != 2) {
-            commandSender.sendMessage(new TextComponent(super.getConfiguration().getString("messages.commands.permission.group.list.usage")
+            commandSender.sendMessage(new TextComponent(this.translationProvider.getMessage(commandSender, "commands.permission.group.list.usage")
                     .replaceAll("%prefix%", super.getConfiguration().getPrefix())));
             return;
         }
         final StringBuilder stringBuilder = new StringBuilder();
-        final List<PermissionGroup> groups = new ArrayList<>(MultiPermsPlugin.getInstance().getGroupProvider().getGroups().values());
+        final List<PermissionGroup> groups = new ArrayList<>(this.groupProvider.getGroups().values());
         Collections.sort(groups);
 
         for (final PermissionGroup group : groups) {
@@ -43,7 +50,7 @@ public class ListCommand extends ProxyCommand {
             }
             stringBuilder.append(group.getColoredDisplayName());
         }
-        commandSender.sendMessage(new TextComponent(super.getConfiguration().getString("messages.commands.permission.group.list.message")
+        commandSender.sendMessage(new TextComponent(this.translationProvider.getMessage(commandSender, "commands.permission.group.list.message")
                 .replaceAll("%prefix%", super.getConfiguration().getPrefix())
                 .replaceAll("%colored_group_names%", stringBuilder.toString())));
     }

@@ -1,9 +1,10 @@
 package com.dev7ex.multiperms.command.permission;
 
-import com.dev7ex.common.bungeecord.command.ProxyCommand;
-import com.dev7ex.common.bungeecord.command.ProxyCommandProperties;
-import com.dev7ex.common.bungeecord.plugin.ProxyPlugin;
+import com.dev7ex.common.bungeecord.command.BungeeCommand;
+import com.dev7ex.common.bungeecord.command.BungeeCommandProperties;
+import com.dev7ex.multiperms.MultiPermsPlugin;
 import com.dev7ex.multiperms.command.permission.user.*;
+import com.dev7ex.multiperms.translation.DefaultTranslationProvider;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
@@ -18,11 +19,15 @@ import java.util.Objects;
  * @author Dev7ex
  * @since 03.03.2024
  */
-@ProxyCommandProperties(name = "user", permission = "multiperms.command.permission.user")
-public class UserCommand extends ProxyCommand implements TabExecutor {
+@BungeeCommandProperties(name = "user", permission = "multiperms.command.permission.user")
+public class UserCommand extends BungeeCommand implements TabExecutor {
 
-    public UserCommand(@NotNull final ProxyPlugin plugin) {
+    private final DefaultTranslationProvider translationProvider;
+
+    public UserCommand(@NotNull final MultiPermsPlugin plugin) {
         super(plugin);
+
+        this.translationProvider = plugin.getTranslationProvider();
 
         super.registerSubCommand(new AddCommand(plugin));
         super.registerSubCommand(new ClearCommand(plugin));
@@ -34,14 +39,15 @@ public class UserCommand extends ProxyCommand implements TabExecutor {
 
     @Override
     public void execute(@NotNull final CommandSender commandSender, @NotNull final String[] arguments) {
-        if ((arguments.length < 3) || (arguments.length > 6)) {
+        if ((arguments.length < 3) || (arguments.length > 7)) {
             Objects.requireNonNull(super.getSubCommand(HelpCommand.class)).execute(commandSender, arguments);
             return;
         }
 
         if (ProxyServer.getInstance().getPlayer(arguments[1]) == null) {
-            commandSender.sendMessage(new TextComponent(super.getConfiguration().getString("no-player-found")
-                    .replaceAll("%prefix%", super.getConfiguration().getPrefix())));
+            commandSender.sendMessage(this.translationProvider.getMessage(commandSender, "general.no-player-found")
+                    .replaceAll("%prefix%", super.getConfiguration().getPrefix())
+                    .replaceAll("%player_name%", arguments[1]));
             return;
         }
 
@@ -49,7 +55,15 @@ public class UserCommand extends ProxyCommand implements TabExecutor {
             Objects.requireNonNull(super.getSubCommand(HelpCommand.class)).execute(commandSender, arguments);
             return;
         }
-        super.getSubCommand(arguments[2].toLowerCase()).get().execute(commandSender, arguments);
+        final BungeeCommand subCommand = super.getSubCommand(arguments[2].toLowerCase())
+                .get();
+
+        if (!commandSender.hasPermission(subCommand.getPermission())) {
+            commandSender.sendMessage(new TextComponent(this.translationProvider.getMessage(commandSender, "general.no-permission")
+                    .replaceAll("%prefix%", super.getConfiguration().getPrefix())));
+            return;
+        }
+        subCommand.execute(commandSender, arguments);
     }
 
     @Override
@@ -57,16 +71,18 @@ public class UserCommand extends ProxyCommand implements TabExecutor {
         if (arguments.length == 2) {
             return ProxyServer.getInstance().getPlayers().stream().map(CommandSender::getName).toList();
         }
-
         if (arguments.length == 3) {
             return Lists.newArrayList(super.getSubCommands().keySet());
         }
-
         if (super.getSubCommand(arguments[2].toLowerCase()).isEmpty()) {
             return Collections.emptyList();
         }
-        final ProxyCommand subCommand = super.getSubCommand(arguments[2].toLowerCase()).get();
+        final BungeeCommand subCommand = super.getSubCommand(arguments[2].toLowerCase())
+                .get();
 
+        if (!commandSender.hasPermission(subCommand.getPermission())) {
+            return Collections.emptyList();
+        }
         if (!(subCommand instanceof TabExecutor)) {
             return Collections.emptyList();
         }

@@ -3,11 +3,12 @@ package com.dev7ex.multiperms.command.permission.user;
 import com.dev7ex.common.bukkit.command.BukkitCommand;
 import com.dev7ex.common.bukkit.command.BukkitCommandProperties;
 import com.dev7ex.common.bukkit.command.completer.BukkitTabCompleter;
-import com.dev7ex.common.bukkit.plugin.BukkitPlugin;
 import com.dev7ex.multiperms.MultiPermsPlugin;
 import com.dev7ex.multiperms.api.group.PermissionGroup;
-import com.dev7ex.multiperms.api.group.PermissionGroupProvider;
 import com.dev7ex.multiperms.api.user.PermissionUser;
+import com.dev7ex.multiperms.group.GroupProvider;
+import com.dev7ex.multiperms.translation.DefaultTranslationProvider;
+import com.dev7ex.multiperms.user.UserProvider;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,72 +19,88 @@ import java.util.stream.Collectors;
 /**
  * @author Dev7ex
  * @since 03.07.2023
+ *
+ * Permission: multiperms.command.permission.user.remove
+ * Usage: /permission user <User> remove <Group | Permission>
+ *
  */
 @BukkitCommandProperties(name = "remove", permission = "multiperms.command.user.remove")
 public class RemoveCommand extends BukkitCommand implements BukkitTabCompleter {
 
-    public RemoveCommand(@NotNull final BukkitPlugin plugin) {
+    private final GroupProvider groupProvider;
+    private final DefaultTranslationProvider translationProvider;
+    private final UserProvider userProvider;
+
+    public RemoveCommand(@NotNull final MultiPermsPlugin plugin) {
         super(plugin);
+
+        this.groupProvider = plugin.getGroupProvider();
+        this.translationProvider = plugin.getTranslationProvider();
+        this.userProvider = plugin.getUserProvider();
     }
+
 
     @Override
     public void execute(@NotNull final CommandSender commandSender, @NotNull final String[] arguments) {
         if (arguments.length != 5) {
-            commandSender.sendMessage(super.getConfiguration().getString("messages.commands.permission.user.remove.usage")
+            commandSender.sendMessage(this.translationProvider.getMessage(commandSender, "commands.permission.user.remove.usage")
                     .replaceAll("%prefix%", super.getConfiguration().getPrefix()));
             return;
         }
-
-        final PermissionGroupProvider groupProvider = MultiPermsPlugin.getInstance().getGroupProvider();
-        final PermissionUser user = MultiPermsPlugin.getInstance().getUserProvider().getUser(arguments[1]).orElseThrow();
+        final PermissionUser user = this.userProvider.getUser(arguments[1]).orElseThrow();
 
         switch (arguments[3]) {
             case "group":
-                if (groupProvider.getGroup(arguments[4].toLowerCase()).isEmpty()) {
-                    commandSender.sendMessage(super.getConfiguration().getString("messages.general.group-not-exists")
-                            .replaceAll("%prefix%", super.getConfiguration().getPrefix()));
+                if (this.groupProvider.getGroup(arguments[4].toLowerCase()).isEmpty()) {
+                    commandSender.sendMessage(this.translationProvider.getMessage(commandSender, "general.group.not-exists")
+                            .replaceAll("%prefix%", super.getConfiguration().getPrefix())
+                            .replaceAll("%group_name%", arguments[4].toLowerCase()));
                     return;
                 }
-                final PermissionGroup group = groupProvider.getGroup(arguments[4].toLowerCase()).get();
+                final PermissionGroup group = this.groupProvider.getGroup(arguments[4].toLowerCase())
+                        .get();
 
                 if (user.getGroup().getIdentification() == group.getIdentification()) {
-                    commandSender.sendMessage(super.getConfiguration().getString("messages.commands.permission.user.remove.group.main-group")
+                    commandSender.sendMessage(this.translationProvider.getMessage(commandSender, "commands.permission.user.remove.group.main-group")
                             .replaceAll("%prefix%", super.getConfiguration().getPrefix())
-                            .replaceAll("%colored_user_name%", user.getColoredName()));
+                            .replaceAll("%colored_user_name%", user.getColoredName())
+                            .replaceAll("%colored_group_name%", group.getColoredDisplayName())
+                            .replaceAll("%group_name%", group.getName()));
                     return;
                 }
 
                 if (!user.getSubGroups().contains(group)) {
-                    commandSender.sendMessage(super.getConfiguration().getString("messages.commands.permission.user.remove.group.user-has-group-not")
+                    commandSender.sendMessage(this.translationProvider.getMessage(commandSender, "commands.permission.user.remove.group.user-has-group-not")
                             .replaceAll("%prefix%", super.getConfiguration().getPrefix())
                             .replaceAll("%colored_user_name%", user.getColoredName())
-                            .replaceAll("%colored_group_name%", group.getColoredDisplayName()));
+                            .replaceAll("%colored_group_name%", group.getColoredDisplayName())
+                            .replaceAll("%group_name%", group.getName()));
                     return;
                 }
                 user.getSubGroups().remove(group);
-                commandSender.sendMessage(super.getConfiguration().getString("messages.commands.permission.user.remove.group.successfully-removed")
+                commandSender.sendMessage(this.translationProvider.getMessage(commandSender, "commands.permission.user.remove.group.successfully-removed")
                         .replaceAll("%prefix%", super.getConfiguration().getPrefix())
                         .replaceAll("%colored_user_name%", user.getColoredName())
-                        .replaceAll("%colored_group_name%", group.getColoredDisplayName()));
+                        .replaceAll("%colored_group_name%", group.getColoredDisplayName())
+                        .replaceAll("%group_name%", group.getName()));
                 break;
 
             case "permission":
                 if (!user.hasPermission(arguments[4])) {
-                    commandSender.sendMessage(super.getConfiguration().getString("messages.commands.permission.user.remove.permission.user-has-permission-not")
+                    commandSender.sendMessage(this.translationProvider.getMessage(commandSender, "commands.permission.user.remove.permission.user-has-permission-not")
                             .replaceAll("%prefix%", super.getConfiguration().getPrefix())
-                            .replaceAll("%colored_user_name%", user.getColoredName()));
+                            .replaceAll("%colored_user_name%", user.getColoredName())
+                            .replaceAll("%premission%", arguments[4]));
                     return;
                 }
-                user.getConfiguration().addPermission(arguments[4]);
-                user.addPermission(arguments[4]);
-                commandSender.sendMessage(super.getConfiguration().getString("messages.commands.permission.user.remove.permission.successfully-removed")
+                user.getConfiguration().removePermission(arguments[4]);
+                user.removePermission(arguments[4]);
+                commandSender.sendMessage(this.translationProvider.getMessage(commandSender, "commands.permission.user.remove.permission.successfully-removed")
                         .replaceAll("%prefix%", super.getConfiguration().getPrefix())
                         .replaceAll("%colored_user_name%", user.getColoredName())
                         .replaceAll("%permission%", arguments[4]));
                 break;
         }
-
-        return;
     }
 
     @Override
@@ -96,21 +113,20 @@ public class RemoveCommand extends BukkitCommand implements BukkitTabCompleter {
             return List.of("group", "permission");
         }
 
-        if (MultiPermsPlugin.getInstance().getUserProvider().getUser(arguments[1]).isEmpty()) {
+        if (this.userProvider.getUser(arguments[1]).isEmpty()) {
             return Collections.emptyList();
         }
-        final PermissionUser user = MultiPermsPlugin.getInstance().getUserProvider().getUser(arguments[1]).orElseThrow();
+        final PermissionUser user = this.userProvider.getUser(arguments[1])
+                .get();
 
-        switch (arguments[3]) {
-            case "group":
-                return user.getSubGroups().stream().map(PermissionGroup::getName).collect(Collectors.toList());
-
-            case "permission":
-                return user.getAllPermissions();
-
-            default:
-                return Collections.emptyList();
-        }
+        return switch (arguments[3]) {
+            case "group" -> user.getSubGroups()
+                    .stream()
+                    .map(PermissionGroup::getName)
+                    .collect(Collectors.toList());
+            case "permission" -> user.getAllPermissions();
+            default -> Collections.emptyList();
+        };
     }
 
 }

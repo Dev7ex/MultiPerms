@@ -3,18 +3,16 @@ package com.dev7ex.multiperms.command;
 import com.dev7ex.common.bukkit.command.BukkitCommand;
 import com.dev7ex.common.bukkit.command.BukkitCommandProperties;
 import com.dev7ex.common.bukkit.command.completer.BukkitTabCompleter;
-import com.dev7ex.common.bukkit.plugin.BukkitPlugin;
-import com.dev7ex.multiperms.command.permission.GroupCommand;
-import com.dev7ex.multiperms.command.permission.HelpCommand;
-import com.dev7ex.multiperms.command.permission.ReloadCommand;
-import com.dev7ex.multiperms.command.permission.UserCommand;
+import com.dev7ex.multiperms.MultiPermsPlugin;
+import com.dev7ex.multiperms.command.permission.*;
+import com.dev7ex.multiperms.translation.DefaultTranslationProvider;
 import com.google.common.collect.Lists;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * @author Dev7ex
@@ -23,13 +21,18 @@ import java.util.Optional;
 @BukkitCommandProperties(name = "permission", permission = "multiperms.command.permission", aliases = {"mp", "perms"})
 public class PermissionCommand extends BukkitCommand implements BukkitTabCompleter {
 
-    public PermissionCommand(@NotNull final BukkitPlugin plugin) {
+    private final DefaultTranslationProvider translationProvider;
+
+    public PermissionCommand(@NotNull final MultiPermsPlugin plugin) {
         super(plugin);
+
+        this.translationProvider = plugin.getTranslationProvider();
 
         super.registerSubCommand(new GroupCommand(plugin));
         super.registerSubCommand(new HelpCommand(plugin));
         super.registerSubCommand(new ReloadCommand(plugin));
         super.registerSubCommand(new UserCommand(plugin));
+        super.registerSubCommand(new VersionCommand(plugin));
     }
 
     @Override
@@ -38,13 +41,18 @@ public class PermissionCommand extends BukkitCommand implements BukkitTabComplet
             Objects.requireNonNull(super.getSubCommand(HelpCommand.class)).execute(commandSender, arguments);
             return;
         }
-        final Optional<BukkitCommand> commandOptional = super.getSubCommand(arguments[0].toLowerCase());
-
         if (super.getSubCommand(arguments[0].toLowerCase()).isEmpty()) {
             Objects.requireNonNull(super.getSubCommand(HelpCommand.class)).execute(commandSender, arguments);
             return;
         }
-        super.getSubCommand(arguments[0].toLowerCase()).get().execute(commandSender, arguments);
+        final BukkitCommand subCommand = super.getSubCommand(arguments[0].toLowerCase()).get();
+
+        if (!commandSender.hasPermission(subCommand.getPermission())) {
+            commandSender.sendMessage(this.translationProvider.getMessage(commandSender, "general.no-permission")
+                    .replaceAll("%prefix%", super.getConfiguration().getPrefix()));
+            return;
+        }
+        subCommand.execute(commandSender, arguments);
     }
 
     @Override
@@ -52,12 +60,21 @@ public class PermissionCommand extends BukkitCommand implements BukkitTabComplet
         if (arguments.length == 1) {
             return Lists.newArrayList(super.getSubCommands().keySet());
         }
-        final Optional<BukkitCommand> commandOptional = super.getSubCommand(arguments[0].toLowerCase());
 
-        if ((commandOptional.isEmpty()) || (!(commandOptional.get() instanceof BukkitTabCompleter))) {
-            return null;
+        if (super.getSubCommand(arguments[0].toLowerCase()).isEmpty()) {
+            return Collections.emptyList();
         }
-        return ((BukkitTabCompleter) commandOptional.get()).onTabComplete(commandSender, arguments);
+        final BukkitCommand subCommand = super.getSubCommand(arguments[0].toLowerCase())
+                .get();
+
+        if (!commandSender.hasPermission(subCommand.getPermission())) {
+            return Collections.emptyList();
+        }
+
+        if (!(subCommand instanceof BukkitTabCompleter)) {
+            return Collections.emptyList();
+        }
+        return ((BukkitTabCompleter) subCommand).onTabComplete(commandSender, arguments);
     }
 
 

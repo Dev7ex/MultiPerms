@@ -1,27 +1,33 @@
 package com.dev7ex.multiperms.command.permission;
 
-import com.dev7ex.common.bungeecord.command.ProxyCommand;
-import com.dev7ex.common.bungeecord.command.ProxyCommandProperties;
-import com.dev7ex.common.bungeecord.plugin.ProxyPlugin;
+import com.dev7ex.common.bungeecord.command.BungeeCommand;
+import com.dev7ex.common.bungeecord.command.BungeeCommandProperties;
+import com.dev7ex.multiperms.MultiPermsPlugin;
+import com.dev7ex.multiperms.translation.DefaultTranslationProvider;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Dev7ex
  * @since 03.03.2024
  */
-@ProxyCommandProperties(name = "help", permission = "multiperms.command.permission")
-public class HelpCommand extends ProxyCommand {
+@BungeeCommandProperties(name = "help", permission = "multiperms.command.permission")
+public class HelpCommand extends BungeeCommand {
 
-    public HelpCommand(@NotNull final ProxyPlugin plugin) {
+    private final DefaultTranslationProvider translationProvider;
+
+    public HelpCommand(@NotNull final MultiPermsPlugin plugin) {
         super(plugin);
+
+        this.translationProvider = plugin.getTranslationProvider();
     }
 
     @Override
     public void execute(@NotNull final CommandSender commandSender, @NotNull final String[] arguments) {
-        super.getConfiguration().getStringList("messages.commands.permission.help.message").forEach(message -> {
-            commandSender.sendMessage(message.replaceAll("%prefix%", super.getConfiguration().getPrefix()));
-        });
+        this.translationProvider.getMessageList(commandSender, "commands.permission.help.message")
+                .forEach(message -> commandSender.sendMessage(
+                        new TextComponent(message.replaceAll("%prefix%", super.getConfiguration().getPrefix()))));
     }
 
 }

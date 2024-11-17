@@ -3,8 +3,9 @@ package com.dev7ex.multiperms.command.permission;
 import com.dev7ex.common.bukkit.command.BukkitCommand;
 import com.dev7ex.common.bukkit.command.BukkitCommandProperties;
 import com.dev7ex.common.bukkit.command.completer.BukkitTabCompleter;
-import com.dev7ex.common.bukkit.plugin.BukkitPlugin;
+import com.dev7ex.multiperms.MultiPermsPlugin;
 import com.dev7ex.multiperms.command.permission.group.*;
+import com.dev7ex.multiperms.translation.DefaultTranslationProvider;
 import com.google.common.collect.Lists;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -20,8 +21,12 @@ import java.util.Objects;
 @BukkitCommandProperties(name = "group", permission = "multiperms.command.permission.group")
 public class GroupCommand extends BukkitCommand implements BukkitTabCompleter {
 
-    public GroupCommand(@NotNull final BukkitPlugin plugin) {
+    private final DefaultTranslationProvider translationProvider;
+
+    public GroupCommand(@NotNull final MultiPermsPlugin plugin) {
         super(plugin);
+
+        this.translationProvider = plugin.getTranslationProvider();
 
         super.registerSubCommand(new AddCommand(plugin));
         super.registerSubCommand(new CreateCommand(plugin));
@@ -43,7 +48,14 @@ public class GroupCommand extends BukkitCommand implements BukkitTabCompleter {
             Objects.requireNonNull(super.getSubCommand(HelpCommand.class)).execute(commandSender, arguments);
             return;
         }
-        super.getSubCommand(arguments[1].toLowerCase()).get().execute(commandSender, arguments);
+        final BukkitCommand subCommand = super.getSubCommand(arguments[1].toLowerCase()).get();
+
+        if (!commandSender.hasPermission(subCommand.getPermission())) {
+            commandSender.sendMessage(this.translationProvider.getMessage(commandSender, "general.no-permission")
+                    .replaceAll("%prefix%", super.getConfiguration().getPrefix()));
+            return;
+        }
+        subCommand.execute(commandSender, arguments);
     }
 
     @Override
@@ -55,7 +67,12 @@ public class GroupCommand extends BukkitCommand implements BukkitTabCompleter {
         if (super.getSubCommand(arguments[1].toLowerCase()).isEmpty()) {
             return Collections.emptyList();
         }
-        final BukkitCommand subCommand = super.getSubCommand(arguments[1].toLowerCase()).get();
+        final BukkitCommand subCommand = super.getSubCommand(arguments[1].toLowerCase())
+                .get();
+
+        if (!commandSender.hasPermission(subCommand.getPermission())) {
+            return Collections.emptyList();
+        }
 
         if (!(subCommand instanceof BukkitTabCompleter)) {
             return Collections.emptyList();
