@@ -1,15 +1,13 @@
-package com.dev7ex.multiperms.listener;
+package com.dev7ex.multiperms.listener.player;
 
 import com.dev7ex.multiperms.api.bukkit.MultiPermsBukkitApi;
 import com.dev7ex.multiperms.api.bukkit.event.MultiPermsListener;
-import com.dev7ex.multiperms.api.user.PermissionUser;
+import com.dev7ex.multiperms.api.bukkit.user.BukkitPermissionUser;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Optional;
 
 /**
  * @author Dev7ex
@@ -24,13 +22,16 @@ public class PlayerChatListener extends MultiPermsListener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void handlePlayerChat(final AsyncPlayerChatEvent event) {
         final Player player = event.getPlayer();
-        final Optional<PermissionUser> optionalUser = super.getUserProvider().getUser(player.getUniqueId());
 
-        if (optionalUser.isEmpty()) {
+        if (super.getUserProvider().getUser(player.getUniqueId()).isEmpty()) {
             return;
         }
+        final BukkitPermissionUser user = super.getUserProvider()
+                .getUser(player.getUniqueId())
+                .get();
+
         event.setFormat(super.getConfiguration().getChatFormat()
-                .replaceAll("%prefix%", optionalUser.get().getGroup().getChatPrefix().replaceAll("&", "§"))
+                .replaceAll("%prefix%",user.getGroup().getChatPrefix().replaceAll("&", "§"))
                 .replaceAll("%name%", player.getName())
                 .replaceAll("%message%", event.getMessage()));
 

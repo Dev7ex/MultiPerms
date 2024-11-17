@@ -1,8 +1,8 @@
-package com.dev7ex.multiperms.listener;
+package com.dev7ex.multiperms.listener.group;
 
-import com.dev7ex.multiperms.api.MultiPermsBungeeApi;
-import com.dev7ex.multiperms.api.event.MultiPermsListener;
-import com.dev7ex.multiperms.api.user.PermissionUser;
+import com.dev7ex.multiperms.api.bungeecord.MultiPermsBungeeApi;
+import com.dev7ex.multiperms.api.bungeecord.event.MultiPermsListener;
+import com.dev7ex.multiperms.api.bungeecord.user.BungeePermissionUser;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PermissionCheckEvent;
 import net.md_5.bungee.event.EventHandler;
@@ -21,15 +21,15 @@ public class PermissionCheckListener extends MultiPermsListener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void handlePermissionCheck(final PermissionCheckEvent event) {
-        if (!(event.getSender() instanceof ProxiedPlayer)) {
+        if (!(event.getSender() instanceof ProxiedPlayer player)) {
             return;
         }
-        final ProxiedPlayer player = (ProxiedPlayer) event.getSender();
-
         if (super.getUserProvider().getUser(player.getUniqueId()).isEmpty()) {
             return;
         }
-        final PermissionUser user = super.getUserProvider().getUser(player.getUniqueId()).get();
+        final BungeePermissionUser user = super.getUserProvider()
+                .getUser(player.getUniqueId())
+                .get();
 
         event.setHasPermission(user.hasPermission(event.getPermission()));
     }
