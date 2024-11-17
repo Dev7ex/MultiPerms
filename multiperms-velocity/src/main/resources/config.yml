@@ -12,20 +12,8 @@ config-version: ${project.version}
 prefix: '§8[§aMultiPerms§8]§r'
 # Settings
 settings:
-  chat:
-    # Enable or disable the chat functionality
-    enabled: true
-    # The format of chat messages
-    format: "%prefix% %name% §8» §7%message%"
   locale:
     # The default language/locale for the plugin
     default: en_US
-  permission-based-actions:
-    # Enable or disable permission checks for player actions
-    # Wiki https://github.com/Dev7ex/MultiPerms/wiki
-    enabled: true
-  tablist:
-    # Enable or disable the tablist functionality
-    enabled: true
   # The time format in which information is displayed
   time-format: dd.MM.yyyy HH:mm:ss
