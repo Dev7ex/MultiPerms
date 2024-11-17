@@ -1,15 +1,18 @@
 package com.dev7ex.multiperms.api;
 
+import com.dev7ex.multiperms.api.group.PermissionGroupConfiguration;
 import com.dev7ex.multiperms.api.group.PermissionGroupProvider;
 import com.dev7ex.multiperms.api.hook.PermissionHookProvider;
 import com.dev7ex.multiperms.api.translation.TranslationProvider;
 import com.dev7ex.multiperms.api.user.PermissionUserProvider;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 
 /**
- * Provides an API for managing permissions, groups, and users within the MultiPerms system.
+ * API for managing permissions, groups, users, translations, and hooks within the MultiPerms plugin.
+ * Provides access to various providers for permission management and user data handling.
  *
  * @author Dev7ex
  * @since 03.07.2023
@@ -17,51 +20,54 @@ import java.io.File;
 public interface MultiPermsApi {
 
     /**
-     * Retrieves the provider responsible for managing permission groups.
+     * Gets the current configuration of the MultiPerms API.
      *
-     * @return A non-null {@link PermissionGroupProvider} instance.
+     * @return the {@link MultiPermsApiConfiguration} instance.
      */
-    PermissionGroupProvider getGroupProvider();
+    @NotNull MultiPermsApiConfiguration getConfiguration();
 
     /**
-     * Retrieves the provider responsible for handling permission hooks.
+     * Gets the provider for managing permission groups.
      *
-     * @return A non-null {@link PermissionHookProvider} instance, parameterized with the appropriate type.
+     * @return the {@link PermissionGroupProvider} instance.
      */
-   PermissionHookProvider<?> getPermissionHookProvider();
+    @NotNull PermissionGroupProvider getGroupProvider();
 
     /**
-     * Retrieves the current translation provider.
-     * <p>
-     * This method returns an instance of {@code TranslationProvider<?>} that is responsible for
-     * handling translations across different locales or languages. The provider may return
-     * translations based on the current system locale or another specified locale.
-     * </p>
+     * Gets the configuration for managing permission groups.
      *
-     * @return a {@code TranslationProvider<?>} instance that can provide localized text or messages.
+     * @return the {@link PermissionGroupConfiguration} instance.
      */
-   TranslationProvider<?> getTranslationProvider();
+    @NotNull PermissionGroupConfiguration getGroupConfiguration();
 
     /**
-     * Retrieves the provider responsible for managing permission users.
+     * Gets the provider for handling permission hooks.
      *
-     * @return A non-null {@link PermissionUserProvider} instance.
+     * @return the {@link PermissionHookProvider} instance.
      */
-    PermissionUserProvider getUserProvider();
+    @NotNull PermissionHookProvider<?> getPermissionHookProvider();
 
     /**
-     * Retrieves the current configuration of the MultiPerms API.
+     * Gets the translation provider for managing language localization.
      *
-     * @return A non-null {@link MultiPermsApiConfiguration} instance.
+     * @return the {@link TranslationProvider} instance.
      */
-   MultiPermsApiConfiguration getConfiguration();
+    @NotNull TranslationProvider<?> getTranslationProvider();
 
     /**
-     * Retrieves the folder where user-related data is stored.
+     * Gets the provider for managing permission users.
      *
-     * @return A {@link File} instance representing the user folder, or null if it is not available.
+     * @return the {@link PermissionUserProvider} instance.
+     */
+    @NotNull PermissionUserProvider<?> getUserProvider();
+
+    /**
+     * Gets the folder where user data is stored.
+     *
+     * @return the {@link File} instance representing the user folder, or null if unavailable.
      */
     @Nullable File getUserFolder();
-    
+
 }
+
 

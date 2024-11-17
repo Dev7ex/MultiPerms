@@ -4,11 +4,11 @@ import com.dev7ex.common.bukkit.BukkitCommon;
 import com.dev7ex.common.bukkit.plugin.module.PluginModule;
 import com.dev7ex.common.collect.map.ParsedMap;
 import com.dev7ex.multiperms.MultiPermsPlugin;
+import com.dev7ex.multiperms.api.bukkit.user.BukkitPermissionUser;
 import com.dev7ex.multiperms.api.group.PermissionGroup;
 import com.dev7ex.multiperms.api.group.PermissionGroupConfiguration;
 import com.dev7ex.multiperms.api.group.PermissionGroupProperty;
 import com.dev7ex.multiperms.api.group.PermissionGroupProvider;
-import com.dev7ex.multiperms.api.user.PermissionUser;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.bukkit.entity.Player;
@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Dev7ex
@@ -35,7 +36,9 @@ public class GroupProvider implements PluginModule, PermissionGroupProvider {
     public void onEnable() {
         this.groups.putAll(this.configuration.getGroups());
 
-        MultiPermsPlugin.getInstance().getLogger().info("Found [" + this.groups.values().size() + "] Groups");
+        MultiPermsPlugin.getInstance()
+                .getLogger()
+                .info("Found: [" + this.groups.values().size() + "] Groups");
     }
 
     @Override
@@ -44,7 +47,7 @@ public class GroupProvider implements PluginModule, PermissionGroupProvider {
     }
 
     @Override
-    public void register(final PermissionGroup group) {
+    public void register(@NotNull final PermissionGroup group) {
         this.groups.put(group.getIdentification(), group);
     }
 
@@ -58,7 +61,7 @@ public class GroupProvider implements PluginModule, PermissionGroupProvider {
         return this.groups.containsKey(identification);
     }
 
-    public void invokePermissions(final Player player, final PermissionUser user) {
+    public void invokePermissions(final Player player, final BukkitPermissionUser user) {
         final String serverVersion = BukkitCommon.getMinecraftServerVersion();
 
         try {
@@ -74,71 +77,53 @@ public class GroupProvider implements PluginModule, PermissionGroupProvider {
 
     @Override
     public Optional<PermissionGroup> getGroup(final int identification) {
-        return this.groups.values().stream().filter(permissionGroup -> permissionGroup.getIdentification() == identification).findFirst();
+        return this.groups.values().stream()
+                .filter(permissionGroup -> permissionGroup.getIdentification() == identification)
+                .findFirst();
     }
 
     @Override
     public Optional<PermissionGroup> getGroup(@NotNull final String name) {
-        return this.groups.values().stream().filter(permissionGroup -> permissionGroup.getName().equalsIgnoreCase(name)).findFirst();
+        return this.groups.values().stream()
+                .filter(permissionGroup -> permissionGroup.getName().equalsIgnoreCase(name))
+                .findFirst();
     }
 
     @Override
     public PermissionGroup getGroupOrDefault(final int identification) {
-        return (this.getGroup(identification).isEmpty() ? this.getDefaultGroup() : this.getGroup(identification).get());
+        return this.getGroup(identification).orElseGet(this::getDefaultGroup);
     }
 
     @Override
-    public Map<Integer, PermissionGroup> getGroups(final List<Integer> identifications) {
-        final Map<Integer, PermissionGroup> groups = new HashMap<>();
-
-        for (final int identification : identifications) {
-            groups.put(identification, this.groups.get(identification));
-        }
-        return groups;
+    public Map<Integer, PermissionGroup> getGroups(@NotNull final List<Integer> identifications) {
+        return identifications.stream()
+                .filter(this.groups::containsKey)
+                .collect(Collectors.toMap(id -> id, this.groups::get));
     }
 
     @Override
-    public PermissionGroup getNextBestGroup(final List<PermissionGroup> groups) {
-        if (groups.isEmpty()) {
-            return this.getDefaultGroup();
-        }
-        Collections.sort(groups);
-        return groups.get(0);
-    }
-
-    public PermissionGroup getNextWorstGroup(final List<PermissionGroup> groups) {
-        if (groups.isEmpty()) {
-            return this.getDefaultGroup();
-        }
-        Collections.sort(groups);
-        Collections.reverse(groups);
-        return groups.get(0);
+    public PermissionGroup getNextBestGroup(@NotNull final List<PermissionGroup> groups) {
+        return groups.stream()
+                .min(Comparator.naturalOrder())
+                .orElseGet(this::getDefaultGroup);
     }
 
     @Override
-    public List<PermissionGroup> getDeadGroups(final List<Integer> groupIdentifications) {
-        final List<PermissionGroup> deadGroups = new ArrayList<>();
-
-        for (final int identification : groupIdentifications) {
-            if (this.getGroup(identification).isPresent()) {
-                continue;
-            }
-            deadGroups.add(this.getGroup(identification).get());
-        }
-        return deadGroups;
+    public List<PermissionGroup> getDeadGroups(@NotNull final List<Integer> groupIdentifications) {
+        return groupIdentifications.stream()
+                .map(this::getGroup)
+                .filter(Optional::isEmpty)
+                .map(Optional::get)  // Assuming `Optional.get()` is safe in this context
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<PermissionGroup> getExistingGroups(final List<Integer> groupIdentifications) {
-        final List<PermissionGroup> existingGroups = new ArrayList<>();
-
-        for (final int identification : groupIdentifications) {
-            if (this.getGroup(identification).isEmpty()) {
-                continue;
-            }
-            existingGroups.add(this.getGroup(identification).get());
-        }
-        return existingGroups;
+    public List<PermissionGroup> getExistingGroups(@NotNull final List<Integer> groupIdentifications) {
+        return groupIdentifications.stream()
+                .map(this::getGroup)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 
     @Override

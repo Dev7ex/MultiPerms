@@ -1,10 +1,9 @@
 package com.dev7ex.multiperms.user;
 
 import com.dev7ex.multiperms.MultiPermsPlugin;
+import com.dev7ex.multiperms.api.bungeecord.user.BungeePermissionUser;
 import com.dev7ex.multiperms.api.group.PermissionGroup;
-import com.dev7ex.multiperms.api.user.PermissionUser;
 import com.dev7ex.multiperms.api.user.PermissionUserConfiguration;
-import com.google.common.collect.Lists;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,9 +13,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author Dev7ex
@@ -24,11 +21,12 @@ import java.util.UUID;
  */
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)
-public class User implements PermissionUser {
+public class User implements BungeePermissionUser {
 
     private UUID uniqueId;
     private String name;
     private PermissionUserConfiguration configuration;
+    private long firstLogin;
     private long lastLogin;
     private PermissionGroup group;
     private List<PermissionGroup> subGroups = new ArrayList<>();
@@ -46,12 +44,13 @@ public class User implements PermissionUser {
 
     @Override
     public List<String> getAllPermissions() {
-        final List<String> permissions = Lists.newArrayList(this.permissions);
+        final Set<String> permissions = new HashSet<>(this.permissions);
         permissions.addAll(this.group.getPermissions());
-        if (!this.subGroups.isEmpty()) {
-            this.subGroups.forEach(permissionGroup -> permissions.addAll(permissionGroup.getPermissions()));
-        }
-        return permissions;
+
+        this.subGroups.stream()
+                .map(PermissionGroup::getPermissions)
+                .forEach(permissions::addAll);
+        return new ArrayList<>(permissions);
     }
 
     @Override
@@ -66,19 +65,23 @@ public class User implements PermissionUser {
 
     @Override
     public boolean hasPermission(@NotNull final String permission) {
-        return ((this.permissions.contains("*")) || (this.permissions.contains(permission))
-                || (this.group.hasPermission(permission))
-                || (this.subGroups.stream().anyMatch(permissionGroup -> permissionGroup.hasPermission(permission))));
+        return this.permissions.contains("*")
+                || this.permissions.contains(permission)
+                || this.group.hasPermission(permission)
+                || this.subGroups.stream().anyMatch(subGroup -> subGroup.hasPermission(permission));
     }
 
     @Override
     public void sendMessage(@NotNull final String message) {
-        this.getEntity().sendMessage(new TextComponent(MultiPermsPlugin.getInstance().getConfiguration().getPrefix() + message));
+        this.getEntity().sendMessage(new TextComponent(MultiPermsPlugin.getInstance()
+                .getConfiguration()
+                .getPrefix() + message));
     }
 
+    @Override
     public ProxiedPlayer getEntity() {
-        return ProxyServer.getInstance().getPlayer(this.uniqueId);
+        return ProxyServer.getInstance()
+                .getPlayer(this.uniqueId);
     }
-
 
 }

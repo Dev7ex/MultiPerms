@@ -2,13 +2,13 @@ package com.dev7ex.multiperms.user;
 
 import com.dev7ex.common.bungeecord.plugin.module.PluginModule;
 import com.dev7ex.common.collect.map.ParsedMap;
-import com.dev7ex.multiperms.MultiPermsPlugin;
+import com.dev7ex.multiperms.MultiPermsConfiguration;
+import com.dev7ex.multiperms.api.bungeecord.user.BungeePermissionUser;
+import com.dev7ex.multiperms.api.bungeecord.user.BungeePermissionUserConfiguration;
+import com.dev7ex.multiperms.api.bungeecord.user.BungeePermissionUserProvider;
 import com.dev7ex.multiperms.api.group.PermissionGroup;
-import com.dev7ex.multiperms.api.group.PermissionGroupProvider;
-import com.dev7ex.multiperms.api.user.PermissionUser;
-import com.dev7ex.multiperms.api.user.PermissionUserConfiguration;
 import com.dev7ex.multiperms.api.user.PermissionUserProperty;
-import com.dev7ex.multiperms.api.user.PermissionUserProvider;
+import com.dev7ex.multiperms.group.GroupProvider;
 import lombok.AccessLevel;
 import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
@@ -20,27 +20,30 @@ import java.util.stream.Collectors;
 
 /**
  * @author Dev7ex
- * @since 03.03.2024
+ * @since 03.07.2023
  */
 @Getter(AccessLevel.PUBLIC)
-public class UserProvider implements PluginModule, PermissionUserProvider {
+public class UserProvider implements PluginModule, BungeePermissionUserProvider {
 
-    private final Map<UUID, PermissionUser> users = new HashMap<>();
-    private final PermissionGroupProvider groupProvider;
+    private final Map<UUID, BungeePermissionUser> users = new HashMap<>();
+    private final MultiPermsConfiguration configuration;
+    private final GroupProvider groupProvider;
 
-    public UserProvider(final PermissionGroupProvider groupProvider) {
+    public UserProvider(@NotNull final MultiPermsConfiguration configuration,
+                        @NotNull final GroupProvider groupProvider) {
+        this.configuration = configuration;
         this.groupProvider = groupProvider;
     }
 
     @Override
     public void onEnable() {
         for (final ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
-            final PermissionUser user = new User(player.getUniqueId(), player.getName());
-            final PermissionUserConfiguration userConfiguration = new UserConfiguration(user);
+            final BungeePermissionUser user = new User(player.getUniqueId(), player.getName());
+            final BungeePermissionUserConfiguration userConfiguration = new UserConfiguration(user);
 
             final ParsedMap<PermissionUserProperty, Object> userData = userConfiguration.read(); // Read Data from Config
-            final List<PermissionGroup> subGroups = MultiPermsPlugin.getInstance().getGroupProvider().getExistingGroups(userData.getIntList(PermissionUserProperty.SUB_GROUPS)); // Get SubGroups from config
-            final PermissionGroup userGroup = MultiPermsPlugin.getInstance().getGroupProvider().getGroupOrDefault(userData.getInteger(PermissionUserProperty.GROUP));
+            final List<PermissionGroup> subGroups = this.groupProvider.getExistingGroups(userData.getIntList(PermissionUserProperty.SUB_GROUPS)); // Get SubGroups from config
+            final PermissionGroup userGroup = this.groupProvider.getGroupOrDefault(userData.getInteger(PermissionUserProperty.GROUP));
 
             subGroups.removeIf(group -> group.getIdentification() == userGroup.getIdentification());
 
@@ -48,10 +51,9 @@ public class UserProvider implements PluginModule, PermissionUserProvider {
             user.setGroup(userGroup);
             user.setPermissions(userData.getStringList(PermissionUserProperty.PERMISSION));
             user.setSubGroups(subGroups);
-
             user.setConfiguration(userConfiguration);
 
-            this.registerUser(user);
+            this.users.put(user.getUniqueId(), user);
 
             this.saveUser(user, PermissionUserProperty.GROUP, PermissionUserProperty.SUB_GROUPS);
         }
@@ -59,47 +61,42 @@ public class UserProvider implements PluginModule, PermissionUserProvider {
 
     @Override
     public void onDisable() {
-        for (final PermissionUser user : this.users.values()) {
-            this.saveUser(user);
-        }
+        this.users.values().forEach(this::saveUser);
         this.users.clear();
     }
 
     @Override
-    public void registerUser(@NotNull final PermissionUser user) {
+    public void register(@NotNull final BungeePermissionUser user) {
         this.users.put(user.getUniqueId(), user);
     }
 
     @Override
-    public void unregisterUser(@NotNull final UUID uniqueId) {
+    public void unregister(@NotNull final UUID uniqueId) {
         this.users.remove(uniqueId);
     }
 
     @Override
-    public Optional<PermissionUser> getUser(@NotNull final UUID uniqueId) {
+    public Optional<BungeePermissionUser> getUser(@NotNull final UUID uniqueId) {
         return Optional.ofNullable(this.users.get(uniqueId));
     }
 
     @Override
-    public Optional<PermissionUser> getUser(@NotNull final String name) {
-        return this.users.values().stream().filter(permissionUser -> permissionUser.getName().equalsIgnoreCase(name)).findFirst();
+    public Optional<BungeePermissionUser> getUser(@NotNull final String name) {
+        return this.users.values()
+                .stream()
+                .filter(permissionUser -> permissionUser.getName().equalsIgnoreCase(name))
+                .findFirst();
     }
 
     @Override
-    public Map<UUID, PermissionUser> getUsers(@NotNull final PermissionGroup group) {
-        final Map<UUID, PermissionUser> users = new HashMap<>();
-
-        for (final PermissionUser onlineUser : this.users.values()) {
-            if (onlineUser.getGroup().getIdentification() != group.getIdentification()) {
-                continue;
-            }
-            users.put(onlineUser.getUniqueId(), onlineUser);
-        }
-        return users;
+    public @NotNull Map<UUID, BungeePermissionUser> getUsers(@NotNull final PermissionGroup group) {
+        return this.users.values().stream()
+                .filter(onlineUser -> onlineUser.getGroup().getIdentification() == group.getIdentification())
+                .collect(Collectors.toMap(BungeePermissionUser::getUniqueId, onlineUser -> onlineUser));
     }
 
     @Override
-    public void saveUser(@NotNull final PermissionUser user) {
+    public void saveUser(@NotNull final BungeePermissionUser user) {
         this.saveUser(user, PermissionUserProperty.UNIQUE_ID,
                 PermissionUserProperty.NAME,
                 PermissionUserProperty.LAST_LOGIN,
@@ -109,7 +106,7 @@ public class UserProvider implements PluginModule, PermissionUserProvider {
     }
 
     @Override
-    public void saveUser(@NotNull final PermissionUser user, @NotNull final PermissionUserProperty... properties) {
+    public void saveUser(@NotNull final BungeePermissionUser user, @NotNull final PermissionUserProperty... properties) {
         final ParsedMap<PermissionUserProperty, Object> data = new ParsedMap<>();
 
         for (final PermissionUserProperty property : properties) {
@@ -120,6 +117,10 @@ public class UserProvider implements PluginModule, PermissionUserProvider {
 
                 case NAME:
                     data.put(property, user.getName());
+                    break;
+
+                case FIRST_LOGIN:
+                    data.put(property, user.getFirstLogin());
                     break;
 
                 case LAST_LOGIN:

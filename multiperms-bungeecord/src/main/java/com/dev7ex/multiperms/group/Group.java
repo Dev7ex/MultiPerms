@@ -8,7 +8,6 @@ import lombok.Setter;
 import net.md_5.bungee.api.ChatColor;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,7 +26,7 @@ public class Group implements PermissionGroup {
     private int priority;
     private String tablistPrefix;
     private String chatPrefix;
-    private List<String> permissions = new ArrayList<>();
+    private List<String> permissions;
 
     @Override
     public String getColoredDisplayName() {
@@ -36,7 +35,8 @@ public class Group implements PermissionGroup {
 
     @Override
     public boolean hasPermission(@NotNull final String permission) {
-        return (this.permissions.contains("*")) || (this.permissions.contains(permission));
+        return (this.permissions.contains("*"))
+                || (this.permissions.contains(permission));
     }
 
 }

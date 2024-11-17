@@ -1,17 +1,18 @@
 package com.dev7ex.multiperms;
 
+import com.dev7ex.common.bungeecord.plugin.BungeePlugin;
 import com.dev7ex.common.bungeecord.plugin.ConfigurablePlugin;
 import com.dev7ex.common.bungeecord.plugin.PluginIdentification;
-import com.dev7ex.common.bungeecord.plugin.ProxyPlugin;
 import com.dev7ex.common.bungeecord.plugin.statistic.PluginStatisticProperties;
 import com.dev7ex.multiperms.api.MultiPermsApiProvider;
-import com.dev7ex.multiperms.api.MultiPermsBungeeApi;
+import com.dev7ex.multiperms.api.bungeecord.MultiPermsBungeeApi;
 import com.dev7ex.multiperms.command.PermissionCommand;
 import com.dev7ex.multiperms.group.GroupConfiguration;
 import com.dev7ex.multiperms.group.GroupProvider;
 import com.dev7ex.multiperms.hook.DefaultPermissionHookProvider;
-import com.dev7ex.multiperms.listener.PermissionCheckListener;
-import com.dev7ex.multiperms.listener.PlayerConnectionListener;
+import com.dev7ex.multiperms.listener.group.PermissionCheckListener;
+import com.dev7ex.multiperms.listener.player.PlayerConnectionListener;
+import com.dev7ex.multiperms.translation.DefaultTranslationProvider;
 import com.dev7ex.multiperms.user.UserProvider;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -23,22 +24,27 @@ import java.io.File;
  * @since 03.03.2024
  *
  * Permission Management for Minecraft
+ *
  */
 @Getter(AccessLevel.PUBLIC)
-@PluginStatisticProperties(enabled = true, identification = 21214)
+@PluginStatisticProperties(enabled = true, identification = 23032)
 @PluginIdentification(spigotResourceId = 111992)
-public class MultiPermsPlugin extends ProxyPlugin implements ConfigurablePlugin, MultiPermsBungeeApi {
+public class MultiPermsPlugin extends BungeePlugin implements ConfigurablePlugin, MultiPermsBungeeApi {
 
     private MultiPermsConfiguration configuration;
     private GroupConfiguration groupConfiguration;
 
+    private PermissionCommand permissionCommand;
+
     private UserProvider userProvider;
     private GroupProvider groupProvider;
     private DefaultPermissionHookProvider permissionHookProvider;
+    private DefaultTranslationProvider translationProvider;
 
     @Override
     public void onLoad() {
         super.createDataFolder();
+        super.createSubFolder("language");
         super.createSubFolder("user");
 
         this.configuration = new MultiPermsConfiguration(this);
@@ -65,7 +71,7 @@ public class MultiPermsPlugin extends ProxyPlugin implements ConfigurablePlugin,
 
     @Override
     public void registerCommands() {
-        super.registerCommand(new PermissionCommand(this));
+        super.registerCommand(this.permissionCommand = new PermissionCommand(this));
     }
 
     @Override
@@ -77,8 +83,9 @@ public class MultiPermsPlugin extends ProxyPlugin implements ConfigurablePlugin,
     @Override
     public void registerModules() {
         super.registerModule(this.groupProvider = new GroupProvider(this.groupConfiguration));
-        super.registerModule(this.userProvider = new UserProvider(this.groupProvider));
+        super.registerModule(this.userProvider = new UserProvider(this.configuration, this.groupProvider));
         super.registerModule(this.permissionHookProvider = new DefaultPermissionHookProvider());
+        super.registerModule(this.translationProvider = new DefaultTranslationProvider(this));
     }
 
     @Override
@@ -87,7 +94,7 @@ public class MultiPermsPlugin extends ProxyPlugin implements ConfigurablePlugin,
     }
 
     public static MultiPermsPlugin getInstance() {
-        return ProxyPlugin.getPlugin(MultiPermsPlugin.class);
+        return BungeePlugin.getPlugin(MultiPermsPlugin.class);
     }
 
 }

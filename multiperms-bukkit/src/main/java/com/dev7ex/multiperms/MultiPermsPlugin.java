@@ -8,14 +8,17 @@ import com.dev7ex.multiperms.api.MultiPermsApiProvider;
 import com.dev7ex.multiperms.api.bukkit.MultiPermsBukkitApi;
 import com.dev7ex.multiperms.command.PermissionCommand;
 import com.dev7ex.multiperms.group.GroupConfiguration;
-import com.dev7ex.multiperms.group.GroupService;
+import com.dev7ex.multiperms.group.GroupProvider;
 import com.dev7ex.multiperms.hook.DefaultPermissionHookProvider;
-import com.dev7ex.multiperms.listener.BasicPermissionListener;
-import com.dev7ex.multiperms.listener.PlayerChatListener;
-import com.dev7ex.multiperms.listener.PlayerConnectionListener;
-import com.dev7ex.multiperms.listener.ScoreboardListener;
-import com.dev7ex.multiperms.scoreboard.ScoreboardService;
-import com.dev7ex.multiperms.user.UserService;
+import com.dev7ex.multiperms.listener.group.PermissionGroupDeleteListener;
+import com.dev7ex.multiperms.listener.group.PermissionGroupEditListener;
+import com.dev7ex.multiperms.listener.player.PlayerChatListener;
+import com.dev7ex.multiperms.listener.player.PlayerConnectionListener;
+import com.dev7ex.multiperms.listener.player.PlayerPermissionCheckListener;
+import com.dev7ex.multiperms.listener.user.UserConnectionListener;
+import com.dev7ex.multiperms.scoreboard.ScoreboardProvider;
+import com.dev7ex.multiperms.translation.DefaultTranslationProvider;
+import com.dev7ex.multiperms.user.UserProvider;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.bukkit.plugin.ServicePriority;
@@ -29,20 +32,24 @@ import java.io.File;
  */
 @Getter(AccessLevel.PUBLIC)
 @PluginIdentification(spigotResourceId = 111992)
-@PluginStatisticProperties(enabled = true, identification = 19393)
+@PluginStatisticProperties(enabled = true, identification = 23031)
 public class MultiPermsPlugin extends BukkitPlugin implements MultiPermsBukkitApi, ConfigurablePlugin {
 
     private MultiPermsConfiguration configuration;
     private GroupConfiguration groupConfiguration;
 
-    private GroupService groupProvider;
-    private UserService userProvider;
-    private ScoreboardService scoreboardProvider;
+    private PermissionCommand permissionCommand;
+
+    private GroupProvider groupProvider;
+    private UserProvider userProvider;
+    private ScoreboardProvider scoreboardProvider;
     private DefaultPermissionHookProvider permissionHookProvider;
+    private DefaultTranslationProvider translationProvider;
 
     @Override
     public void onLoad() {
         super.createDataFolder();
+        super.createSubFolder("language");
         super.createSubFolder("user");
 
         this.configuration = new MultiPermsConfiguration(this);
@@ -55,8 +62,9 @@ public class MultiPermsPlugin extends BukkitPlugin implements MultiPermsBukkitAp
 
     @Override
     public void onEnable() {
-        MultiPermsApiProvider.registerApi(this);
         super.getServer().getServicesManager().register(MultiPermsBukkitApi.class, this, this, ServicePriority.Normal);
+
+        MultiPermsApiProvider.registerApi(this);
     }
 
     @Override
@@ -66,23 +74,33 @@ public class MultiPermsPlugin extends BukkitPlugin implements MultiPermsBukkitAp
 
     @Override
     public void registerCommands() {
-        super.registerCommand(new PermissionCommand(this));
+        super.registerCommand(this.permissionCommand = new PermissionCommand(this));
     }
 
     @Override
     public void registerListeners() {
-        super.registerListenerIf(new BasicPermissionListener(this), enableIf -> this.configuration.isBasicRightsEnabled());
-        super.registerListenerIf(new PlayerChatListener(this), enableIf -> this.configuration.isChatEnabled());
+        super.registerListenerIf(new PermissionGroupDeleteListener(this),
+                enableIf -> this.configuration.isTablistEnabled());
+        super.registerListenerIf(new PermissionGroupEditListener(this),
+                enableIf -> this.configuration.isTablistEnabled());
+
+        super.registerListenerIf(new PlayerChatListener(this),
+                enableIf -> this.configuration.isChatEnabled());
         super.registerListener(new PlayerConnectionListener(this));
-        super.registerListenerIf(new ScoreboardListener(this), enableIf -> this.configuration.isTablistEnabled());
+        super.registerListenerIf(new PlayerPermissionCheckListener(this),
+                enableIf -> this.configuration.isPermissionBasedActionsEnabled());
+
+        super.registerListenerIf(new UserConnectionListener(this),
+                enableIf -> this.configuration.isTablistEnabled());
     }
 
     @Override
     public void registerModules() {
-        super.registerModule(this.groupProvider = new GroupService(this.groupConfiguration));
-        super.registerModule(this.userProvider = new UserService(this.groupProvider));
-        super.registerModule(this.scoreboardProvider = new ScoreboardService(this.groupProvider));
+        super.registerModule(this.groupProvider = new GroupProvider(this.groupConfiguration));
+        super.registerModule(this.scoreboardProvider = new ScoreboardProvider(this.groupProvider));
+        super.registerModule(this.userProvider = new UserProvider(this.configuration, this.groupProvider, this.scoreboardProvider));
         super.registerModule(this.permissionHookProvider = new DefaultPermissionHookProvider());
+        super.registerModule(this.translationProvider = new DefaultTranslationProvider(this));
     }
 
     @Override
