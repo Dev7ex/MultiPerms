@@ -65,7 +65,6 @@ public record ScoreboardProvider(GroupProvider groupProvider) implements PluginM
                 other.getScoreboard().getTeam(formattedTeamName);
 
         final String tablistPrefix = (entryGroup.getTablistPrefix() != null) ? entryGroup.getTablistPrefix() : "Error";
-        System.out.println(entryGroup.getColor() + " t");
         final ChatColor teamColor = ChatColor.getByChar(entryGroup.getColor());
 
         if (teamColor != null) {
