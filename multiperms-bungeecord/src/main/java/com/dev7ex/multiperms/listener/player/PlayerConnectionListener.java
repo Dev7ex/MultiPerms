@@ -50,11 +50,9 @@ public class PlayerConnectionListener extends MultiPermsListener {
         user.setLastLogin(System.currentTimeMillis());
         user.setFirstLogin(userData.getLong(PermissionUserProperty.FIRST_LOGIN));
 
-        System.out.println(user.getFirstLogin());
         if (user.getFirstLogin() == 0L) {
             user.setFirstLogin(System.currentTimeMillis());
         }
-        System.out.println("2   " + user.getFirstLogin());
 
         super.getUserProvider().register(user);
         super.getUserProvider().saveUser(user, PermissionUserProperty.FIRST_LOGIN, PermissionUserProperty.LAST_LOGIN,
