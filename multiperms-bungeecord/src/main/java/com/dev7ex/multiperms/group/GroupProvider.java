@@ -32,6 +32,22 @@ public class GroupProvider implements PluginModule, PermissionGroupProvider {
     public void onEnable() {
         this.groups.putAll(this.configuration.getGroups());
 
+        if (!this.configuration.contains(0)) {
+            final PermissionGroup group = Group.builder()
+                    .setIdentification(0)
+                    .setName("default")
+                    .setDisplayName("User")
+                    .setColor('7')
+                    .setPriority(0)
+                    .setTablistPrefix("§8[§7User§8] §7")
+                    .setChatPrefix("§8[§7User§8]§7")
+                    .setPermissions(Collections.emptyList())
+                    .build();
+
+            this.groups.put(0, group);
+            this.configuration.add(group);
+        }
+
         MultiPermsPlugin.getInstance()
                 .getLogger()
                 .info("Found: [" + this.groups.values().size() + "] Groups");

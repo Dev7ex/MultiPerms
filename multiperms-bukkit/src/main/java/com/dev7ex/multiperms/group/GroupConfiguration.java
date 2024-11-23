@@ -29,19 +29,6 @@ public class GroupConfiguration extends Configuration implements PermissionGroup
 
     public void load() {
         super.loadFile();
-
-        if (!this.contains(0)) {
-            this.add(Group.builder()
-                    .setIdentification(0)
-                    .setName("default")
-                    .setDisplayName("User")
-                    .setColor('7')
-                    .setPriority(0)
-                    .setTablistPrefix("§8[§7User§8] §7")
-                    .setChatPrefix("§8[§7User§8]§7")
-                    .setPermissions(Collections.emptyList())
-                    .build());
-        }
     }
 
     @Override
