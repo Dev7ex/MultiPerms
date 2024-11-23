@@ -3,10 +3,7 @@ package com.dev7ex.multiperms.command;
 import com.dev7ex.common.bungeecord.command.BungeeCommand;
 import com.dev7ex.common.bungeecord.command.BungeeCommandProperties;
 import com.dev7ex.multiperms.MultiPermsPlugin;
-import com.dev7ex.multiperms.command.permission.GroupCommand;
-import com.dev7ex.multiperms.command.permission.HelpCommand;
-import com.dev7ex.multiperms.command.permission.ReloadCommand;
-import com.dev7ex.multiperms.command.permission.UserCommand;
+import com.dev7ex.multiperms.command.permission.*;
 import com.dev7ex.multiperms.translation.DefaultTranslationProvider;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -34,6 +31,7 @@ public class PermissionCommand extends BungeeCommand implements TabExecutor {
         super.registerSubCommand(new HelpCommand(plugin));
         super.registerSubCommand(new ReloadCommand(plugin));
         super.registerSubCommand(new UserCommand(plugin));
+        super.registerSubCommand(new VersionCommand(plugin));
     }
 
     @Override
