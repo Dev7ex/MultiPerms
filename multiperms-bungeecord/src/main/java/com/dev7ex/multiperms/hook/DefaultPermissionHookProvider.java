@@ -51,12 +51,11 @@ public class DefaultPermissionHookProvider implements PluginModule, BungeePermis
         hooks.add(hook);
 
         this.permissionHooks.put(hookHolder, hooks);
-        hook.register();
 
         MultiPermsPlugin.getInstance()
                 .getLogger()
-                .info("Register [" + this.permissionHooks.get(hookHolder).size() + "] Permission Hooks from"
-                        + hookHolder.getClass().getSimpleName());
+                .info("Register [" + this.permissionHooks.get(hookHolder).size() + "] Permission Hooks from "
+                        + hookHolder.getDescription().getName());
     }
 
     @Override
@@ -66,13 +65,12 @@ public class DefaultPermissionHookProvider implements PluginModule, BungeePermis
         if ((hooks == null) || (hooks.isEmpty())) {
             return;
         }
-        this.permissionHooks.get(hookHolder).forEach(PermissionHook::unregister);
         this.permissionHooks.remove(hookHolder);
 
         MultiPermsPlugin.getInstance()
                 .getLogger()
-                .info("Unregister [" + this.permissionHooks.get(hookHolder).size() + "] Permission Hooks from"
-                        + hookHolder.getClass().getSimpleName());
+                .info("Unregister [" + this.permissionHooks.get(hookHolder).size() + "] Permission Hooks from "
+                        + hookHolder.getDescription().getName());
     }
 
     @Override
