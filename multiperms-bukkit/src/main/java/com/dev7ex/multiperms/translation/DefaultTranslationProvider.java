@@ -65,7 +65,7 @@ public class DefaultTranslationProvider implements PluginModule, BukkitTranslati
                 }
             }
         }
-        this.plugin.getLogger().info(String.format("Loaded [%d] translations", this.translationConfigurations.size()));
+        this.plugin.getLogger().info(String.format("Found: [%d] Translations", this.translationConfigurations.size()));
     }
 
     @Override
