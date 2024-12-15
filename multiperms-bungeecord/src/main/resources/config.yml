@@ -15,8 +15,5 @@ settings:
   locale:
     # The default language/locale for the plugin
     default: en_US
-  tablist:
-    # Enable or disable the tablist functionality
-    enabled: true
   # The time format in which information is displayed
   time-format: dd.MM.yyyy HH:mm:ss
