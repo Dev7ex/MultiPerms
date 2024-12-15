@@ -7,7 +7,7 @@
     <groupId>com.dev7ex</groupId>
     <artifactId>multiperms</artifactId>
     <packaging>pom</packaging>
-    <version>1.1.0-SNAPSHOT</version>
+    <version>1.1.1-SNAPSHOT</version>
     <name>MultiPerms</name>
     <description>Permission Management for Minecraft</description>
     <url>https://github.com/Dev7ex/MultiPerms</url>
