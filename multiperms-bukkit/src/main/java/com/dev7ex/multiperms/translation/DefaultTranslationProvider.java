@@ -42,6 +42,7 @@ public class DefaultTranslationProvider implements PluginModule, BukkitTranslati
     public void onEnable() {
         this.plugin.saveResource("language/de_DE.json", true);
         this.plugin.saveResource("language/en_US.json", true);
+        this.plugin.saveResource("language/zh_CN.json", true);
 
         final File languageFolder = this.plugin.getSubFolder("language");
 
