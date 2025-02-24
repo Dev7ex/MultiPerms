@@ -78,6 +78,19 @@ public class GroupProvider implements PluginModule, PermissionGroupProvider {
     }
 
     public void invokePermissions(final Player player, final BukkitPermissionUser user) {
+        if (BukkitCommon.isPaper()) {
+            try {
+                final Class<?> entityClazz = Class.forName("org.bukkit.craftbukkit.entity.CraftHumanEntity");
+                final Field field = entityClazz.getDeclaredField("perm");
+                field.setAccessible(true);
+                field.set(player, new GroupPermissible(player, user));
+
+            } catch (final Exception exception) {
+                exception.printStackTrace();
+            }
+            player.updateCommands();
+            return;
+        }
         final String serverVersion = BukkitCommon.getMinecraftServerVersion();
 
         try {
@@ -89,6 +102,7 @@ public class GroupProvider implements PluginModule, PermissionGroupProvider {
         } catch (final Exception exception) {
             exception.printStackTrace();
         }
+        player.updateCommands();
     }
 
     @Override
