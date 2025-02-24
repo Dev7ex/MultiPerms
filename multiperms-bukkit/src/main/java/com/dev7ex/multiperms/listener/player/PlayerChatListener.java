@@ -31,9 +31,10 @@ public class PlayerChatListener extends MultiPermsListener {
                 .get();
 
         event.setFormat(super.getConfiguration().getChatFormat()
-                .replaceAll("%prefix%",user.getGroup().getChatPrefix().replaceAll("&", "§"))
-                .replaceAll("%name%", player.getName())
-                .replaceAll("%message%", event.getMessage()));
+                .replaceAll("%prefix%", user.getGroup().getChatPrefix().replaceAll("&", "§").replace("%", "%%"))
+                .replaceAll("%name%", player.getName().replace("%", "%%"))
+                .replaceAll("%message%", event.getMessage().replace("%", "%%")));
+
 
         if (player.hasPermission("multiperms.chat.colored")) {
             event.setFormat(event.getFormat().replaceAll("&", "§"));
