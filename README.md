@@ -1,4 +1,4 @@
-![Icon-Bild](resources/images/title-github.png)
+![Icon-Bild](multiperms-resources/src/main/resources/images/title-github.png)
 
 ![Latest Release](https://img.shields.io/github/v/release/Dev7ex/MultiPerms)
 ![SpigotMC Downloads](https://img.shields.io/spiget/downloads/111992?label=Downloads)
@@ -63,6 +63,7 @@ With this solution, you can manage player permissions individually, create custo
 * /permission user <User> info                                      [multiperms.command.permission.user.info]
 * /permission user <User> remove <Group | Permission> <Value>       [multiperms.command.permission.user.remove]
 * /permission user <User> set <Group>                               [multiperms.command.permission.set]
+* /permission version                                               [multiperms.command.permission.version]
 ```
 
 # Installation
@@ -83,13 +84,6 @@ With this solution, you can manage player permissions individually, create custo
 
 - After installation, a configuration file will be created in the `plugins/MultiPerms` directory. Here, you can make
   various settings.
-
-<details>
-<summary>config.yml</summary>
-```yaml
-Placeholder
-```
-</details>
 
 # Contributing
 
@@ -114,6 +108,6 @@ details.
 If you have any questions or need support, you can reach out to Dev7ex via:
 
 - Twitter: [@Dev7ex](https://twitter.com/Dev7ex)
-- Discord: [Dev7ex's Discord Server](https://discord.gg/ta33bbA8eF)
+- Discord: [Dev7ex's Discord Server](discord.dev7ex.com)
 
 
