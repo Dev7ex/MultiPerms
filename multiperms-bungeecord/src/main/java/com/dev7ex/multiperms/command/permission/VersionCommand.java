@@ -4,7 +4,6 @@ import com.dev7ex.common.bungeecord.command.BungeeCommand;
 import com.dev7ex.common.bungeecord.command.BungeeCommandProperties;
 import com.dev7ex.common.bungeecord.plugin.BungeePlugin;
 import com.dev7ex.multiperms.MultiPermsPlugin;
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.jetbrains.annotations.NotNull;
