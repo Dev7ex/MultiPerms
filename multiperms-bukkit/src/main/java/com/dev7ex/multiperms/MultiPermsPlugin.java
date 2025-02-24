@@ -62,14 +62,16 @@ public class MultiPermsPlugin extends BukkitPlugin implements MultiPermsBukkitAp
 
     @Override
     public void onEnable() {
-        super.getServer().getServicesManager().register(MultiPermsBukkitApi.class, this, this, ServicePriority.Normal);
-
         MultiPermsApiProvider.registerApi(this);
+
+        super.getServer().getServicesManager().register(MultiPermsBukkitApi.class, this, this, ServicePriority.Normal);
     }
 
     @Override
     public void onDisable() {
         MultiPermsApiProvider.unregisterApi();
+
+        super.getServer().getServicesManager().unregisterAll(this);
     }
 
     @Override
