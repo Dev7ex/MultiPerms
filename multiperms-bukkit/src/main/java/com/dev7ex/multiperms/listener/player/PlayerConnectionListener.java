@@ -54,7 +54,6 @@ public class PlayerConnectionListener extends MultiPermsListener {
         if (user.getFirstLogin() == 0L) {
             user.setFirstLogin(System.currentTimeMillis());
         }
-
         MultiPermsPlugin.getInstance().getGroupProvider().invokePermissions(player, user);
 
         super.getUserProvider().register(user);
